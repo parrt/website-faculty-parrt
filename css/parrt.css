@@ -1,1 +1,13 @@
 #terence img { float: left; border: 1px solid #CCC; padding: 4px; background: #FFF; margin: 7px 10px 0 0; }
+dl {
+    padding: 0;
+  }
+  dt {
+    float: left;
+    clear: left;
+    width: 100px;
+  }
+  dd {
+    margin: 0 0 0 110px;
+    padding: 0 0 1em 0;
+  }
