@@ -1,0 +1,457 @@
+<HTML>
+<HEAD>
+<body bgcolor=#FFFFFF text=#000000>
+<title>Little Nybbles of Development Wisdom</title>
+</HEAD>
+<BODY>
+<H1>Little Nybbles of Development Wisdom</H1>
+
+
+<P><A HREF="http://www.cs.usfca.edu/~parrt/"><B>Terence Parr</B></A>, October 31, 2002.  Updated October 14, 2010.
+
+<P>Software is more an art or skill than a science or engineering
+discipline.  The most effective means of becoming a great programmer
+is through an apprenticeship (even if self-directed).  There is no
+substitute for coding a big system that evolves over time.  It seems
+to take about 2 to 3 years before somebody absorbs the important
+lessons.  You can read books and papers in an effort to avoid common
+mistakes, but talking to and working with other programmers still
+seems to be the best (if slow) approach.  As Chris Brooks says,
+becoming a commercial programmer is like becoming an architect; being
+a junior associate for a while is part of the process.
+
+<P>In this document, I have tried to remember and distill my hard-fought
+3-year experience as I evolved into a programmer capable of building a
+commercial product, <A HREF="http://www.jguru.com"><B>http://www.jguru.com</B></A> (for more information on the
+evolution and design of the jGuru server, you can check out
+<A HREF="http://www.cs.usfca.edu/~parrt/course/601/lectures/jguru/jguru.html"><B>
+ this lecture</B></A>).
+Naturally this is a not
+complete list of programming advice, but rather what I learned on this
+project.
+<H2>Hardware, networks, logs</H2>
+
+<OL>
+<LI><B>Use as few machines and system components as possible</B>.  System
+complexity made our first system extremely unstable.
+</LI>
+<LI><B>All machines of a certain class (web or db etc...) must be identical
+down to the exact version of Linux</B>.  Reproducibility is important.
+You must be certain that your test and live environments are identical
+if you want a chance of finding bugs.
+</LI>
+<LI><B>To go from raw linux box in a known state to fully configured system
+ready to bring live must be completely automated</B>.  You should be able
+to install a few RPMs or tar balls, push your software, and go live.
+Reproducibility!
+</LI>
+<LI><B>Hardware fails a lot more than you would expect in commercial
+settings</B>.  Make sure that not only your backups work but that you can
+easily reconstruct a system.  If you don't have kickstart, make a
+human script to quickly follow like a pilots checklist to get moving.
+</LI>
+<LI><B>Avoid system components that force GUI or webpage initialization /
+configuration</B>.  Automation is the goal and a GUI configuration tool
+destroys any hope of configuring a box by unzipping or installing
+RPMs.
+</LI>
+<LI><B>Machines where you deploy or test software must be READONLY</B>.  You
+are not tempted to tweak the config or software on the live system
+(even if you use a repository to deploy).
+</LI>
+<LI><B>Lock down your systems tightly; no unnecessary ports open</B>.
+POP,sendmail,bind (DNS) are gaping holes.  Your system is constantly
+being swept by "target acquisition radar".
+</LI>
+<LI><B>Verify that your backup strategy works (i.e., you can bring back
+data) and that it continues to operate</B>.  Back up onto hard drives if you can and then onto tape (shudder) or DVD-RAMs.
+</LI>
+<LI><B>Use a hosting service like Rackspace if you can</B>.  You can often
+avoid pesky and surly sys admins &lt;wink&gt; plus get better, cheaper service.
+</LI>
+<LI><B>Log generously</B>.  It's extremely useful for examining the events
+leading up to a crash or bug.
+</LI>
+<LI><B>Collect all of your logs on one machine if possible</B>.  Makes it much easier to back up and you don't risk clobbering log files as you try to back them up onto a single disk somewhere.
+</LI>
+
+</OL>
+<H2>Programming</H2>
+
+<H3>Dealing with change</H3>
+
+<OL>
+<LI><B>Your software design decays over time as you add features and modify
+existing features</B>.  Rewriting and cleaning it up (<em>refactoring</em>) is as
+important as adding new features.  Seriously.  I'm not kidding.  Heh,
+write this down!  jGuru's first system did not get refactored at all.  With 4
+or 5 coders we had lots of decay and the system was insanely fragile.
+</LI>
+<LI><B>There is a constant battle between writing code quickly (yielding
+brittle code) and writing code that is flexible</B>.  The future may
+render all of your costly-to-write flexibility irrelevant so be
+careful not to overdesign.  Refactoring can fix some problems later.
+If you have to write brittle code, try to isolate it in a method or
+via an interface so clients don't have to change.
+</LI>
+<LI><B>User code should ask a high level service</B>.  For example, have a
+<TT>FAQManager</TT> for content and let it worry about where the persistence
+layer is.  The db might be on another machine or move as your system
+evolves.  You want to avoid large scale changes in your user code when
+services change location.  For example, web pages (<em>user code</em>) should
+never directly make SQL queries.  To be able to swap a service out,
+put a "switch" between your services and your user code so you can
+swap them out (even dynamically) without having to change code that
+references that service.  You'll need Java <TT>interface</TT>s for this.
+</LI>
+<LI><B>Specify as much as you can in an array, a property file, or a
+configuration file</B>.  Changing data is much easier and safer than
+changing code.
+</LI>
+<LI><B>Coding a complete system a second time is easy, fast, and accurate
+because you have few (if any) coding or design decisions to make</B>.  It
+just seems to fall out of your head.  This fact has huge implications
+for refactoring.  Managers hate throwing out huge swaths of code
+because they paid for it and they fear it will take the same amount of
+time to recode.  In reality, writing something a second time is
+dramatically faster and results in vastly cleaner code.  I've seen
+compression rates of months for iteration 1 down to a week for
+iteration 2.  When you know all the issues, you code with confidence
+and know there won't be any surprises.  Surprises like, "<em>oh!  I
+never thought of that security hole.  How can we avoid that?</em>", are
+the primary speed and cleanliness impediments.  If you are recoding
+only a piece of some software, unit tests are crucial to ensure your
+new software fits within the old structure.
+</LI>
+
+</OL>
+<H3>Robustness</H3>
+
+<OL>
+<LI><B>If something can go wrong, make sure you design the software so that
+it can only work the right way</B>.  For example, what if I launch the
+notification system (emails 10,000 people) twice at once?  What if I
+launch it from the test server?
+</LI>
+<LI><B>Automate anything that you might screw up like "is this the live
+server or a test server?"</B>  Don't make somebody specify it--at 3am
+after the server has crashed, you'll make a mistake.  For example,
+jGuru uses file <TT>$HOSTNAME</TT>.family to get its list of what sites to
+host upon startup.
+</LI>
+<LI><B>Never leave an enemy at your back</B> (unless you are trying to collect
+more data on it).  I.e., don't leave a strange bug hoping it will go
+away.  It will return in the most horrible way like relatives coming
+to visit for 3 weeks.  If you think there might be a problem with a component,
+there is.
+</LI>
+<LI><B>Build unit tests and functional testing procedures.</B>  This includes
+building or using a load tester to check boundary conditions and
+possibly to reproduce infrequently-occurring bugs.  Automate as many
+tests as you can even if you have to buy a test harness for a GUI
+etc...  When you find a bug, add a test case for it.
+</LI>
+<LI><B>Always build quality in</B>!  Don't just test for trouble later to see
+how bad it is and try to fix it.
+</LI>
+<LI><B>If you are only one that knows the server, it will break on
+vacation or the day you are supposed to leave</B>.  The day we launched
+the 2nd version of jGuru, I flew across the country only to hear the
+server had crashed.  My business partner had to "become my hands" over
+the phone to debug a system he had never looked at before!  Another
+time, the hard drive on our main live server died a miserable death
+the day I was to leave for Paris.  Rackspace.com had to replace the
+drive, copy any surviving data, and I had to run through my "human
+scripts" to launch a new system.  I almost missed my flight.
+</LI>
+<LI><B>When something goes wrong think about what is different or what has
+changed</B>.  I know this sounds obvious, but it is a very powerful
+focusing technique.  It is really tempting to freak out and try all
+kinds of fixes when the system becomes totally unstable.  After our
+system crash in the bullet point above (before my trip to Paris),
+jGuru became super slow and unstable.  The system was launching 700
+threads, bringing the machine to a grinding halt.  I kept thinking
+"what's changed?", but couldn't think of anything.  The software was
+the same, I said!  So, I started building thread debugging tools.
+Anyway, turns out I did change something.  Ah ha, I thought.  I did
+make a minor change when trying to get the server back up after the
+crash--it was causing <TT>portal.init()</TT> to be executed twice.  The
+system seemed ok for a few hours, but then was right back to the huge
+number of threads.  Finally, I realized that I had specifically code
+the system so it could only be initialized once.  It couldn't have
+been that.  Using the "what has changed" focusing lens, I convinced
+myself that the software was the same (confirmed by revision control
+system).  Therefore, no matter how unlikely, there must be a data
+problem.  Given that the server crashed, I would normally be
+suspicious of this immediately, but our database naturally has
+transactions and recovers nicely from power outages and so on.  Well,
+it turns out the search database, which is different, got caught in
+the middle of a locked operation when the system died (leaving a file
+called <TT>commit.lock</TT>) around.  I copied this search database with the
+freeze-dried lock to the new drive, making the search database freak
+out.  The search library waits like 3 seconds to see if the lock will
+free up before timing out.  With all of the searches initiated on
+jGuru, this queued up a HUGE number of threads.  Problem was solved
+literally by removing that lock file.  The number of threads dropped
+before my eyes.
+</LI>
+<LI><B>Don't code after drinking</B>. ;)
+</LI>
+
+</OL>
+<H3>Design tactics</H3>
+
+<OL>
+<LI><B>Don't be too clever</B>.  Being able to keep a really complicated
+design and/or implementation in your head means you may not search for
+a simpler, more elegant solution.  Others will not be able to modify
+nor maintain your code.  You will not be able to figure it out
+yourself after 6 months.  First make it simple and make it work.  THEN, if
+it's too slow, trade complexity for speed.
+</LI>
+<LI><B>Only keep one long-term copy of objects related to database
+entities so you only have one object to update</B>.  Go further than only
+keeping one copy--keep only one <B>pointer</B> to that object.  You only
+want one pointer to, say, a person record laying around so that, when
+you need to swap out the person record with an updated version, you
+can change just one pointer.  This implies that your data indices must
+keep <em>symbolic</em> references not actual pointers to objects.  For
+example, I always have one table called <TT>personIDToPersonMap</TT>, which
+holds an actual pointer to a <TT>Person</TT>.  All other indices such as
+<TT>superUserIDList</TT> track IDs not pointers to the <TT>Person</TT> so I can do
+whatever I want to the <TT>Person</TT> objects w/o screwing up a single
+index.
+</LI>
+<LI><B>If you can afford it, don't store the results of computations</B>.  The
+computation or algorithm may change in future and then you have legacy
+results to change, possibly with both legacy and new data available in
+the system.  For example, don't store when somebody needs to pay or
+reregister.  Store the account created date and then have an algorithm
+decide when to ask them to pay when they log in next or whenever.  The
+algorithm will change as you change your business model.
+</LI>
+<LI><B>Don't intermingle a computation within another unless it's too slow
+otherwise</B>.  It's too hard to read/modify.  Better to see a set of smaller,
+more encapsulated computations than one giant blob that computes and saves
+results for later use. E.g., ANTLR grammar analysis tried to track too
+many statistics rather than simply walking structures later to get
+computations it needed.  I wasn't sure stats were correct.
+</LI>
+<LI><B>Nested or recursive structures and related algorithms are the
+natural solution for many tasks</B>.  Unfortunately, recursive thought
+seems to be a very difficult concept.  Don't resist it; practice will
+unleash its power.  Examples of nested and recursive techniques:
+<OL>
+<LI>grammars and languages
+</LI>
+<LI>languages written in themselves
+</LI>
+<LI>hashtable of vectors (in practice, you can use this structure to
+sort with roughly linear performance for data sets with many repeated keys)
+</LI>
+<LI>hashtable of hashtables
+</LI>
+<LI>trees / walking
+</LI>
+
+</OL>
+</LI>
+<LI><B>Learn about languages, their design and implementation</B>. Skill with
+computer languages is the single most useful weapon you can acquire
+because it covers just about every application of computing. As the
+primary developer of ANTLR, a popular parser/translator generator, I
+receive questions from an amazingly broad group of users: biologists
+doing DNA pattern recognition, NASA scientists automatically building
+communication libraries from deep space probe specification RTF
+documents, people building configuration files for every conceivable
+kind of program, and so on. The jGuru.com portal uses many languages
+and parsers from object-schema specifications to HTML sanitizers. The
+point is that computer language skills enable you to produce extremely
+flexible and powerful software, not just compilers for new programming
+languages.
+</LI>
+
+</OL>
+<H3>Performance</H3>
+
+<OL>
+<LI><B>Don't worry about writing super efficient code until you know there is or will be a speed problem</B>.  Use a profiler to <B>know</B> rather than <B>deduce</B> where the inefficient hot spots are.  The relationship between source code and efficient 
+CPU instruction execution is now so distant that you should not try to
+guess what will be efficient at that level (pipelines, branch prediction,
+caches, ...).  Worry more about algorithmic
+complexity (i.e., speed/space) and use a profiler.
+</LI>
+<LI><B>Do expensive operations either up front or in the background</B>. (load
+data, snoop or search other sites, sort, ...).  This is a good use of
+threads.
+</LI>
+<LI><B>Use memory if you have it</B>.  If your sizeof(database) &lt; sizeof(RAM),
+cache the whole damn thing.  There is a lot of resistance to this idea
+from database experts, but you'll never beat a fetch from your cache
+with a database fetch (even using database caching).  I often load
+everything upon start up of the server (with simple "<TT>SELECT * FROM
+xxx</TT>" queries) and then use a <em>write-through cache</em> strategy.  When
+you add a record, such as add a new forum entry, write to the database
+and then update the cache (including any indices you may have).
+</LI>
+<LI><B>Cache pages that don't change or change infrequently to reduce server load</B>.
+</LI>
+
+</OL>
+<H2>3rd Party Software</H2>
+
+<OL>
+<LI><B>Do not rely on anybody else's software for your core application
+unless you really trust and have tested the library or service</B>.  If
+you have to use other software for a critical component, make sure you
+get the source.<BR>
+<BR>
+One time with epicentric, I had to email the chief
+architect and their programmers the exact lines of offensive code
+before they believed me that their software went to the db every time
+it wanted an <TT>int</TT> property.  Pages were rendering in 30 seconds a
+piece.<BR>
+<BR>
+A really smart friend told me about the excellent object to RDMS
+mapping library he used.  I asked him about the caching policy and
+then how to change the policy.  Turns out you could not really tune it and
+it wasn't clear how it cached.  That is unusable for a real product.  Control is crucial.
+</LI>
+<LI><B>Most systems don't need the power of oracle</B>.  Use something
+simpler as it may not be worth the hassle of oracle.
+</LI>
+
+</OL>
+<H2> Project management</H2>
+
+<OL>
+<LI><B>Sometimes just picking a path is better than wasting months and
+months trying to find an optimal path</B>.  You probably won't find it.
+You must pick something, learn from it, and then decide later for
+system II.  Picking Epicentric was the right idea--we had to get started.
+</LI>
+<LI><B>Making robust software is very hard; particularly with lots of
+coders</B>.  There are 3 kinds of dangerous programmers:
+<OL>
+<LI>very lazy programmers; "can't we get a tester?" or "well, this software has problems but testing will find it."
+</LI>
+<LI>a programmer that is so impressed with himself or herself that they "don't need to test that much".
+</LI>
+<LI>a programmer that thinks they are good but isn't totally secure; they don't want to test their code for fear they'll find evidence of poor skills.<BR>
+<BR>
+Drive the concepts of quality, testing, robustness into your coders.
+</LI>
+
+</OL>
+</LI>
+<LI><B>Programmers are curious beasts, which is normally a good thing</B>.  However, watch out that they don't find new technology <em>X</em> and demand to use it because "it's so cool."  At the same time, don't let management force <em>X</em> on you to make your software buzzword compliant.
+</LI>
+<LI><B>Document everything you can including software design, system configuration, your experiments, and your thoughts</B>.  I have note files on many topics and then when I'm ready to implement that topic, I have a good start on a feature list and design.  You should be able to refer new programmers to a wealth of information about your system.  Even though it was a hassle at jGuru and we were <B>swamped</B> with work, making notes was crucial.
+</LI>
+<LI><B>Writing software is about accepting imperfection and incompleteness to make deadlines</B>.  Accept failure as part of the job to reduce stress.  Prioritize so you know what is reasonable to ignore.  Perfectionism forces some employees to become mired and unable to complete anything, some to work 3x too hard, some to freak out thinking you are posing impossible problems.
+</LI>
+
+</OL>
+<H2>Herding cats</H2>
+
+
+<P><em>Most of this I learned from CEO Tom Burns</em>.
+<OL>
+<LI><B>There is no such thing as a good, busy manager</B>.  A busy manager
+can only <B>react</B> not <B>act</B>.  Further a busy manager has no time to
+think about how he/she is affecting employees.  Example: The CEO and I
+switched responsibility for getting a doc done.  A sales guy sent me
+something, but I ignored it to do it faster by myself.  It turns out
+he had worked for a week on his version but I didn't know.  I sent a
+very bad signal that he was (incorrectly) irrelevant.
+</LI>
+<LI><B>The only realistic definition of loyalty is "our interests are
+aligned"</B>.  Works for both the employer and employee.  Here are some
+important related points:
+<OL>
+<LI><B>Any time a company talks about being loyal to employees, they are
+lying or are being idealistic at best</B>.  A company usually does not
+have a choice when laying off employees--the company has a
+responsibility to their shareholders to make money not provide jobs.
+One could design a system where everybody had a job (even if the
+government had to lie about it), but I'm pretty sure those countries
+have all collapsed now in favor of capitalism.  Anyway, when jGuru
+quit being a training company and became a web portal for java
+developers, we needed coders not trainers.  We layed off half the
+company the day we made the final decision to switch directions.<BR>
+<BR>
+Remember those companies with "no-fire" policies like DEC and
+HP?  They too have succumbed to reality, dropping their early idealism
+with their first massive layoffs.<BR>
+<BR>
+
+</LI>
+<LI><B>Only an employee can choose to be loyal</B> as he/she can't really be
+forced to quit by an external source...only a company fires people.
+An employee may have a better opportunity.  At that point, their
+interests are no longer aligned with their current company.  Why
+should he/she be loyal to a company that cannot offer them loyalty?
+</LI>
+<LI><B>Many individuals and whole cultures will find the underlying
+facilitating concept of "at will" employment distasteful</B>.  But, from a
+management perspective, being able to lay off people means you are not
+afraid to hire people.  If hiring someone is like getting married for
+life, a company will be very reluctant to hire new people in order to
+satisfy a new demand.  The company must be agile during difficult and
+good times.  They might actually stick around to keep some people
+employed or hire more people in the future.<BR>
+<BR>
+
+</LI>
+
+</OL>
+</LI>
+<LI><B>When an employee calls to say he/she screwed up, thank them for
+their willingness to inform you and then work on a solution</B>.
+Otherwise, if you yell, the employee will learn not to tell you when
+things are bad.
+</LI>
+<LI><B>Extremely important to see truth even if you don't like it</B>.  See
+it as early as possible. Must know if somebody can't do something or
+something will be delayed.
+</LI>
+<LI><B>You must give decision authority to employees otherwise you have to
+make all decisions and employees are locked waiting for you to make
+the decision</B>.  Plus, it costs lots of time to make all decisions.
+You end up with a company of automata if you don't give them authority
+to act.  Along these lines, give someone a task and either be
+satisfied or not.  Don't tell them to do something and then barge in
+and tell them how to do it.
+</LI>
+<LI><B>All employees have faults--do not lightly toss them away</B>.  At least you know what their problems are.  A new employee will have unknown problems.
+</LI>
+<LI><B>Ask people what they want to do</B>. Bribe them if necessary to get them to do icky things by offering good things to do afterwards (unless you can find somebody that doesn't mind doing the icky things).  Recognizing an employee's control over themselves is important.  Try to let them choose to do the icky thing.
+</LI>
+<LI><B>You cannot control anybody or anything</B>.  You can only nudge or influence.
+</LI>
+<LI><B>Management is a low position as it is all about making sure your employees are productive (like a conductor in an orchestra)</B>.  You do no real work.  Only getting stuff for employees and insulating them from crap above and from outside.
+</LI>
+<LI><B>No matter how carefully you phrase something, someone will
+misinterpret it and be upset</B>.
+</LI>
+
+</OL>
+<H2>Summary</H2>
+
+
+<P>Use as few system components as you can and only those that you trust,
+for which you have source code, and that can be automatically
+installed and configured.  Use a hosting service if you can.
+
+<P>Be paranoid when you write software.  Assume you have lots of bugs and
+make your system tolerant of them.  Try to find these bugs
+aggressively.  Continuously groom (refactor) your software as you add
+features.
+<H2>Notes</H2>
+
+
+<P>Apologies to Professor Dave Meyer at Purdue University for deriving
+this document's title from his excellent class notes: <em>Little Bits of
+Digital Wisdom</em>.
+</BODY>
+</HTML>

@@ -1,0 +1,293 @@
+<HTML>
+<HEAD>
+<body bgcolor=#FFFFFF text=#000000>
+<title>The Essentials Of Debugging</title>
+</HEAD>
+<BODY>
+<H1>The Essentials Of Debugging</H1>
+
+
+<P><A HREF="http://www.cs.usfca.edu/~parrt/"><B>Terence Parr</B></A>, September 18, 2004.
+
+<P>The most common statement I get from my students is the maddeningly
+vague: "<em>my program doesn't work</em>".  My response is usually, "<em>well,
+isn't that interesting</em>" or "<em>well, how do you think you'll handle
+it</em>" because I want students to learn self-reliance and
+diagnostic/debugging skills.  While not particularly instructive, it
+usually has the desired effect--the student goes off and puts his or
+her brain to work thinking about the problem.  That said, I've always
+been troubled by my brute-force "kick off the deep end" approach.  I
+wondered if there was a way to teach debugging itself.
+
+<P>The most troubling thing to me is that many students and even
+commercial coders seem to freeze like deer in the headlights when
+unexpected problems arise.  Some literally try just randomly changing
+things or, worse, they try the program a few more times hoping it will
+start working again.  There are two primary issues at work: (i) they
+have no idea how to approach debugging and (ii) they have no
+confidence that they can nail the problem.  I hope to ameliorate the
+situation with this essay by providing a clear approach programmers
+can follow or by at least giving people a place to begin.
+
+<P>There are many kinds of programming problems and I'll need to narrow
+the focus to have a hope of exposing the debugging process.  Algorithm
+implementation errors are reasonably easy to track down with a
+debugger.  You can just step through looking for an invalid state or
+bad data; the last statement to execute is either wrong or generally
+points you at the problem.  Then there are the truly bizarre problems
+that defy logic.  In languages such as C/C++, you could have a buffer
+overflow situation that wipes out your stack activation record leading
+to really wacky results; the environment has been corrupted.  In
+languages such as Java where this is not possible, however, you can
+still get really bizarre problems.  Here, I will focus on the type of
+problem where a trivial bit of code that should work, does not.
+
+<P>For years, I've sought a simple example I could use to illustrate some
+of the key processes rolling around in my head as I attack one of
+these bizarre problems.  I needed a really vexing problem, but one
+that was so simple that it could be described quickly to any
+programmer; one whose solution was obvious once explained.  This essay
+describes such a problem and the path to its successful resolution.
+First, I'll define the (mundane) problem itself and then do a
+walk-through of the problem-solving process.  In the final section, I
+attempt to summarize the essentials of what went on in my head during
+the debugging session.
+<H2>The problem</H2>
+
+
+<P>One Friday afternoon in the Fall of 2004, my business partner Tom
+called me on the phone to ask me if he could describe a problem to me.
+I knew the problem was nasty if he needed to talk to somebody else;
+his programming and debugging skills are formidable.  He really just
+needed another perspective I thought (though neither of us is
+well-versed in HTML mail issues).  It turns out that a single URL
+issue stumped the two of us for a few hours.
+
+<P>Tom was generating HTML email messages with embedded links, but
+exactly one of those links was not going to the right page on the web
+when you clicked on it.  He knew precisely which link was causing the
+problem and customers were seeing apparently the same issue.  Here it
+is:
+
+<FONT SIZE=2><PRE>
+&lt;a href="http://foo.com/x?event=goto_add&ha_id=10954648"&gt;...&lt;/a&gt;
+</PRE></FONT>
+
+
+
+<P>Seems fine, right?  Definitely follows valid URL syntax.  It is
+identical syntactically to all the other links that do work.  The link
+got to his servlet as:
+
+<FONT SIZE=2><PRE>
+http://foo.com/x?event=goto_add&ha_id%
+</PRE></FONT>
+
+
+
+<P>The "<TT>=10954648</TT>" was being converted to a simple percent sign "<TT>%</TT>"!
+Links such as:
+
+<FONT SIZE=2><PRE>
+http://foo.com/y?event.accept&address=ZWxrQHJlZG
+</PRE></FONT>
+
+
+
+<P>worked perfectly though.
+
+<P>That is all the information that he gave me.
+<H2>The Twisted Path To a Solution</H2>
+
+
+<P>My first thought was that there was a weird bug in the Mac OS X mailer
+he was using that extracted the link improperly.  He indicated that
+other users seemed to be having the same problem, but we decided to
+rule out the OS X mailer by using a web-based mail host like
+<TT>yahoo.com</TT>.  Same problem--bad link.  Ah!  What if the browser and
+mailer use the same HTML rendering code?  We loaded IE for the Mac and
+it too had the problem.  Hmm...what could be involved in the
+translation of this URL through to his servlet?  If not in the
+extraction of the URL from the email, it could be in the web server
+that receives the URL.  Could <TT>resin</TT> (web server) have a weird bug
+that caused it to mangle the URL arguments it provided to the servlet?
+We decided that that was pretty damn unlikely in general and
+particularly here because it works for other URLs that are even more
+complicated.
+
+<P>Lacking further ideas derived from deduction, we tried the following
+experiments:
+<UL>
+<LI>using single quotes around the URL in the tag instead of double quotes.
+</LI>
+<LI>using no quotes around the URL
+</LI>
+<LI>changing the name of the arguments; I thought perhaps the underscore
+in <TT>ha_id</TT> was annoying the mailer
+</LI>
+<LI>changing the order of the arguments
+</LI>
+<LI>changing the number of arguments
+</LI>
+
+</UL>
+
+<P>Nothing changed; bad link.  We also tried changing "<TT>=</TT>" to the URL
+escape "<TT>%3D</TT>", thinking that there was some weird escape thing going
+on, but the web server then didn't see <TT>ha_id</TT> as an argument (the
+equals after it is escaped).
+
+<P>If we assumed the URL was fine, something must be wrong with the HTML
+code surrounding the URL.  That looked totally fine also and moving
+the surrounding HTML around had no affect.  Dead-end.
+
+<P>We decided that, like it or not, there was something about that
+particular URL and probably that one argument that was invalid.  I
+asked if there was any javascript or other preprocessing going on that
+might alter the URL before it was sent out of the mailer to the
+browser.  Not that we could find or think of.
+
+<P>If the URL has something wrong with it, time to compare the URL to
+something that works.  What is different between arguments
+"<TT>ha_id=10954648</TT>" and "<TT>address=ZWxrQHJlZG</TT>"?  Clearly, one argument
+is a number and the other is not.  We put a <TT>Z</TT> in front of the
+<TT>10954648</TT> and inserted code into the processing servlet to strip the
+first character from the <TT>ha_id</TT> argument.  It worked!  Pretty
+unsatisfying, however, because we didn't know why.
+
+<P>There was something about equals followed by a number.  Well, we knew
+that the equals is a Base64 MIME type padding character, but that
+wouldn't explain how it and the argument got converted to a percent
+sign.  Hmm...but there was definitely something wrong with the equals
+followed by number sequence.
+
+<P>We tried lots of google searches such as "equals email URL problem"
+etc..., but found nothing appropriate.  Ok, did this jog anything in
+my own memory?
+
+<P>Back when I was using a text-based emailer, I sometimes got email that
+mostly looked like text, but had a bunch of "<TT>=0A</TT>" and other wacky
+things in it.  We looked up what 10 hex (the first two characters of
+10954648) was in terms of ASCI; it's the "data link escape" character.
+In decimal, it's linefeed.  109 hex (first three characters from the
+id) is the lowercase letter "<TT>m</TT>".  So "<TT>=10</TT>" didn't seem to yield
+the percent character (ASCII code 45 decimal).
+
+<P>We tried google again for email encoding types as it had to be
+something related to that.  Finally, we found the keyword
+"quoted-printable", which then led us to realize it explained all
+known behavior because its escape character is the equals sign!  We
+looked and indeed the header for the email said:
+
+<FONT SIZE=2><PRE>
+Content-Transfer-Encoding: quoted-printable
+</PRE></FONT>
+
+
+
+<P>We changed "<TT>ha_id=10954648</TT>" to "<TT>ha_id=3D10954648</TT>" because <TT>3D</TT> hex
+is the equals ASCII character and voila! It worked!  Removing the
+escape and the <TT>Content-Transfer-Encoding</TT> header, made the original
+URL and all others work just fine.
+
+<P>The solution is obvious once you see it, but a combination of logic,
+research, and experimentation was required to solve it (as is often
+the case).  This type of problem can take forever to solve if you do
+not have a decent debugging instinct.
+<H2>The Essentials</H2>
+
+
+<P>What can be generalized from the process above?  I conclude that there
+are six essential elements that you must employ:
+<OL>
+<LI><B>Reproducibility</B>.  First, you must find a way to reliably reproduce
+the error, which in itself often just points you straight at the
+problem through deductive reasoning.  The bug may happen in precisely
+one circumstance, which can only happen in one place in the code.  A
+bug that appears randomly is essentially unsolvable unless you have a
+leap of insight.  You need a guarantee of cause and effect so that you
+can make inferences about changes you introduce.  A change in the code
+that "fixes" the problem may or may not really fix it as the problem
+randomly appears and disappears.
+</LI>
+<LI><B>Reduction</B>.  Reduce the problem to its essence.  Because our brains
+are limited, we need to have the smallest input that will cause the
+bug.  The simpler the data or path to the bug, the more easily you
+will deduce or track down the problem.  A large data set introduces a
+great deal of "noise" that camoflages the essential item causing
+trouble.  If you have a large data input file that causes the problem,
+do a binary search type reduction.  Cut the file in half, throwing out the last half.  If you still have a problem, then you can ignore the final half.  If the problem goes away, then start whittling down the final half as it must contain the input that causes the problem.
+</LI>
+<LI><B>Deduction</B>.  This is your primary weapon once you've gotten a small
+input that reliably causes a problem.  What is the general path
+through the program used by the input?  What component(s) could be the
+problem or mangle the data so that a future component fails?  What is
+the difference between this input that doesn't work with some input
+that does work?  Try to reduce the scope of possibilities by forming
+and eliminating hypotheses.  For example, we eliminated the
+possibility that the Mac OS X emailer had a bug by reproducing the bug
+using IE and web-based mailer.  In a sense, this process is very similar to that followed by experimental physicists, who try to explain natural phenomena with a theory or an equation.  To support their claims, they must carefully design experiments that, if successful, have only one likely explanation--namely their theory.  Other physicists try to reproduce the results to verify or refute the hypothesis.
+</LI>
+<LI><B>Experimentation</B>.  Psychologist study the Human mind by testing in
+it variation situations with different stimuli.  They use brain scans,
+response times, and so on to support their hypotheses about how our
+brains work.  Similarly, you must change the conditions of the test to
+see if your bug disappears.  If you correct the bug with a change,
+that change should tell you what the problem is or at least give you a
+big hint about what is going on.  You form hypotheses with your logic
+and deductive reasoning skills and then filter them by experimentation
+and observation.  For example, by experimentation, we concluded that
+it was the specific argument we were using that caused the problem.
+Finally, we narrowed it down (by using some experience) to the "equals
+as escape" problem.
+</LI>
+<LI><B>Experience</B>.  There is no substitute for experience.  Becoming a
+good programming in general means apprenticing yourself to a good
+programmer or fumbling your way through it yourself for a few years
+(either way making lots of mistakes).  Experience helps in the
+debugging process in two ways: (i) you have honed your ability to
+execute the previous four elements and (ii) you may have seen a
+similar bug or just plain know more about a particular problem.  For
+example, I had seen the equals sign as an escape character in email
+before and the next time I see or somebody asks me about a URL problem
+in HTML mail, the first thing I'll ask about is their encoding.
+Borrowing the experience of other developers is also important.
+Searching the web and talking to other developers can save you a huge
+amount of effort by leveraging from other peoples' experience.
+Interestingly, just explaining the problem to another developer (or
+even your spouse/friend) can line things up properly in your head so
+that simple deduction tells you where the problem lies.
+</LI>
+<LI><B>Tenacity</B>.  All bugs are caused by computers doing exactly what
+they are told; there is absolutely no mystery, hence, all problems are
+solvable. You must begin with the attitude that you will never give up
+no matter how long it takes to find the problem and correct it. You
+will get more and more confident each time you solve a problem. You
+must be tenacious. I have never ever left a bug unsolved that I
+considered worth fixing.  Sometimes the lengths you have to go are extreme, but result in good "war stories."  Once, when debugging a small device controlling a robot, my only link to the outside world was an LED that I could blink.  I had to attach an oscilloscope to look at how the software was wiggling the LED!  As a side effect of solving insidious bugs, you will become a
+much better programmer as you start to anticipate errors and to code
+in a manner less likely to produce mysterious bugs.
+</LI>
+
+</OL>
+
+<P>In practice, these six elements are used in combination and in
+various order, though points 1 and 2 make sense to do first.
+<H2>When have you found the bug?</H2>
+
+
+<P>Just as the process of debugging itself is important, knowing when you can stop is also crucial.  There are two key principles to internalize so you can recognize when you have squashed a bug.
+
+<P>First, You cannot rely on a solution that just seems to work, but which you cannot understand.  Many programmers stop when something they change in the code makes the bug disappear, even though they have no idea why.  
+This is not a solution.  The bug still exists, you have merely hidden it for the time being.  For example, Tom and I did not stop after we were able to make the link work by prefixing the ID number with "<TT>Z</TT>"; we had merely hidden the problem.  "Never leave an enemy at your back," as they say.
+
+<P>Second, and almost as bad as having no explanation, is having a theory that does not explain all known behavior.  A single unexplained issue implies you have not found the real solution or there are multiple bugs at play.  Recall that a theory in physics or math can be shot down with single counterexample.  A story is told about Einstein during the 1930s.  He was asked by a journalist if he was worried that so many prominent German physicists were coming forward to discount his theory of relativity.  Einstein replied simply: No, if relativity were incorrect it would only take a single physicist to show it.
+<H2>Summary</H2>
+
+
+<P>Debugging can be one of the most difficult and frustrating aspects of being a programmer, but your attitude can make a big difference.  I approach a nasty problem as if it were an interesting or challenging mystery to solve.  Moreover, I attack the problem with confidence, knowing that eventually I will solve the problem.  Your attitude can also mean the difference between a good programmer and a bad programmer.  I asked a pilot friend of mine once if he was disturbed when he had to perform a difficult landing in high winds.  He replied that, no, most of the time flying is routine--pilots earn their money during difficult landings and some enjoy the opportunity to demonstrate their prowess.  Similarly, programmers distinguish themselves most clearly when confronted with difficult bugs to solve.  The essentials described in this essay should give students and new programmers at least a strategy to follow, thus, giving them the confidence to find and correct their bugs.
+
+<P><em>I'd like to thank Tom Burns and Sriram Srinivasan for their helpful
+suggestions on this essay</em>.
+</BODY>
+</HTML>
