@@ -1,0 +1,200 @@
+<HTML>
+<HEAD>
+<body bgcolor=#FFFFFF text=#000000>
+<title>Why writing software is not like engineering</title>
+</HEAD>
+<BODY>
+<H1>Why writing software is not like engineering</H1>
+
+
+<P><A HREF="http://www.cs.usfca.edu/~parrt"><B> Terence Parr</B></A> [author of <A HREF="http://www.antlr.org"><B> ANTLR parser generator</B></A> etc...]
+
+<P>This article popped up on <A HREF="http://www.reddit.com/r/programming/comments/bg5ii/why_writing_software_is_not_like_engineering"><B> reddit</B></A> and <A HREF="http://news.ycombinator.com/item?id=1207721"><B> news.ycombinator.com</B></A>.
+
+<P><A HREF="http://www.azoft.com/people/seremina/edu/write_soft-rom.html"><B> In Romanian</B></A>
+
+<P>While my talent lies in software, my graduate studies were in computer
+engineering (designing and building digital computers).  One
+observation always struck me: computer engineering seemed more
+straightforward than computer science (building software). There are a
+set of engineering design rules to follow and engineering projects are
+much more likely to work out than software projects.  Yes, there are
+some spectacular engineering failures but, empirically, reliable and
+useful software is more difficult to pull off.  To illustrate my
+point, consider the amazing space probes we send throughout the solar
+system.  The spacecraft themselves work extremely well, often living
+long past their design lifetimes. Their control software, on the other
+hand, has to be constantly tweaked and patched in flight to keep the
+mission together.  I am not trying to say that engineering is easy; it
+is not.  My goal is simply to explain why software is harder to get
+right than physical construction projects in general and why "software
+engineering" is an inappropriate term.
+
+<P>The Economist magazine (Nov 27, 2004 p. 71) cites the Standish Group's
+estimates that
+<BLOCKQUOTE>
+"<i>...30% of all software projects are canceled, nearly half come in over
+budget, 60% are considered failures by the organizations that
+initiated them, and 9 out of 10 come in late.</i>"</BLOCKQUOTE>
+
+
+
+<P>The article goes on to point out that while few large infrastructure
+projects are completed on time and on budget, you usually get
+something in the end.  You have to enter the realm of software (or the
+military) in order to spend billions and get nothing for it.  The
+biggest reason for this profligate waste lies in that, while a
+partially completed building or infrastructure project with flaws can
+still be useful, software either works or it doesn't. Because software is
+devilishly difficult to get right, we often end up with nothing (e.g.,
+<A HREF="http://www.informationweek.com/fbi-dumps-botched-computer-overhaul/159400512"><B> FBI Dumps Botched Computer Overhaul</B></A>, <A HREF="http://www.nytimes.com/2010/03/19/us/19fbi.html?_r=0"><B> F.B.I. Faces New Setback in Computer Overhaul</B></A>).
+
+<P>Why is writing software not like engineering?  The answer lies in a
+single fundamental difference with far-reaching ramifications:
+engineering is constrained by the real, physical world and software is
+not.  While obvious, this is the crucial difference that explains why
+software development is harder to get right. The next few sections
+explore these ramifications.
+<H4>Engineering components exist in the real world</H4>
+
+
+<P>
+<a href="http://en.wikipedia.org/wiki/Image:Calabi-Yau.png"><img align=right
+title="calabi-yau manifold image from wikipedia" src=http://upload.wikimedia.org/wikipedia/commons/d/d4/Calabi-Yau.png width=150></a>
+
+
+<P>Physical engineering projects are easier to visualize and, therefore,
+easier to build; heck, you can actually touch the components and the
+final product with your hands.  The further you get away from the
+Newtonian view of the physical world that we experience in everyday
+life, the more difficult the project.  Quantum physics is
+difficult because particles don't behave like rocks.  String theory,
+the most promising method of modeling quantum physics, is primarily
+difficult to understand because it deals with six or seven extra
+dimensions beyond the usual three spatial dimensions.  Imagine trying
+to design and build a house on a
+<A HREF="http://en.wikipedia.org/wiki/Image:Calabi-Yau.png"><B> Calabi-Yau
+Manifold</B></A> (image to the right is a 3-D projection).
+
+<P>Software does not even have the <B>concept</B> of dimension.  You might say
+that there are no lines within which to color.  At least for
+engineering projects above the quantum level, no one expects to find
+structures that "defy the laws of physics."  This limits what you can
+physically build and how you can build it but at least it provides a
+well-defined world in which to work. The ethereal world of software
+does not have this luxury, but our tools are getting better.
+Object-oriented programming was invented to make writing software more
+familiar to our hunter gatherer brains; that is, to make software
+components with properties and behavior like objects in the real
+world.
+<H4>Engineering components interact in more predictable ways</H4>
+
+
+<P>Engineering is less risky than software because engineering
+experiences fewer constituent component interactions. While minor
+changes to one part of a car's structure can easily affect the crash
+robustness of another, it would be unusual for a design flaw in the
+dome light to cause intermittent engine stalls.  In a home
+construction project, you would have to work pretty hard to make a
+toilet flush every time someone rang the doorbell.
+
+<P>When building software, on the other hand, you have to be
+hypervigilant to avoid these undesirable interactions. One of the
+reasons many programmers like pure functional programming is its lack
+of side effects--there simply is no way for the toilet to flush
+inadvertently when the doorbell rings.
+
+<P>The situation is even worse in languages like C++ without inherent
+buffer overflow protection.  A remote fragment of code can
+unintentionally alter the behavior of the overall application much
+more easily.  In fact, it is this particular weakness that most
+hackers exploit.  By causing a buffer overflow, an attacker can force
+the program to open a hole in its defenses.
+<H4>Engineering has fewer fundamental midcourse design changes</H4>
+
+
+<P>The final reason that software is more difficult to get right than
+engineering projects concerns midcourse design changes.  The physical
+world is not as malleable as the insubstantial world of software and,
+consequently, clients simply have lower expectations. Congress does
+not go to NASA halfway through a moonshot and ask them to go to Mars
+instead. Most engineering projects are able to actually use the
+waterfall design method: determine functional requirements, design,
+implement, test. For most software projects, this is a recipe for
+disaster.
+
+<P>Unfortunately, midcourse design changes happen in software all the
+time--every time the customer gets a peek at the running software.  In
+fact, the agile software development method is a direct response to
+ever-changing design requirements. Programmers are asked to embrace
+change as an opportunity. Still, constant changes to the design hamper
+development efforts and developers must constantly refactor software
+to prevent it from becoming a tangled, unmaintainable mess.
+
+<P>You might ask why, if software is so hard to get right, airplanes
+do not fall out of the sky. It turns out they do occasionally and bad
+software is often the culprit; e.g.,
+<A HREF="http://www.youtube.com/watch?v=_EM0hDchVlY"><B> watch a fly-by-wire
+Airbus 320 crash</B></A>. Most of the time, however, hardware control
+software for airplanes, cars, and medical devices works as
+expected. The reason for the increased reliability is
+threefold. First, there are lives at stake and people are likely more
+careful.  Secondly, the software developers are not asked to alter the
+software fundamentally during development.  For example, a propeller
+driven airplane does not become a jet aircraft in the middle of
+development. An engineering team would start over, whereas a software
+team is typically asked to make radical changes midstream. And,
+finally, such software deals with controlling physical devices and
+starts to gain some of the advantages afforded physical engineering
+projects.
+<H4>Is software development a science?</H4>
+
+
+<P>So if software development is not like engineering, what is it?  We
+call the discipline computer science, but I am not sure that term is
+completely appropriate either.  You may recall the old joke, "If a
+discipline has 'science' in the title, it probably isn't." In my view,
+science is about discovering and describing physical phenomena using a
+<em>scientific method</em>.  Merriam-Webster describes the scientific method
+as:
+<BLOCKQUOTE>
+"<i>Principles and procedures for the systematic pursuit of knowledge
+involving the recognition and formulation of a problem, the collection
+of data through observation and experiment, and the formulation and
+testing of hypotheses.</i>"</BLOCKQUOTE>
+
+
+
+<P>That description smacks of
+<A HREF="http://www.ibm.com/developerworks/web/library/wa-debug.html"><B>
+debugging</B></A> more than the act of writing software.  Computer science is
+about building things like engineering but without the luxury of a
+toolbox and components taken from the physical world.  No one has
+worked out reliable and effective procedures for building large pieces
+of software as the engineers have done for physical project.  As Alan
+Kay puts it, software is "engineering of a sort...but just done by
+brute force".
+<A HREF="http://acmqueue.com/modules.php?name=Content&pa=showpage&pid=273&page=5"><B>
+A conversation with Alan Kay</B></A>:
+<BLOCKQUOTE>
+"<i>If you look at software today, through the lens of the history of
+engineering, it's certainly engineering of a sort--but it's the kind of
+engineering that people without the concept of the arch did. Most
+software today is very much like an Egyptian pyramid with millions of
+bricks piled on top of each other, with no structural integrity, but
+just done by brute force and thousands of slaves.</i>"</BLOCKQUOTE>
+
+
+<H4>Writing software is more an art than an engineering discipline</H4>
+
+
+<P>Writing software is most similar to writing fiction novels.  Writing
+novels is also an act of creation in an unconstrained and ethereal
+medium with few well-established construction rules. We know good
+writing when we see it, but it is hard to teach. Experience writing
+and feedback from better writers (coders) is the most reliable means
+of becoming a good writer (coder).  Without a well understood process,
+software will remain more an art than a science.  The term "software
+engineering" is more a goal than how we actually write software.
+</BODY>
+</HTML>
