@@ -1,16 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113303773-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-113303773-1');
-</script>
-<meta name="viewport" content="width=device-width, initial-scale=0.9">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 <style>
 #toc {
@@ -49,6 +40,13 @@
         font-style: italic;
         font-size: 14px;
 }
+@media screen and (max-width: 320px) {
+  /* comes into effect for screens less than or equal to 320 pixels */
+	.blkeqn {
+			padding: 5px;
+			margin-left: 0px;
+	}
+}
 .blkeqn {
 		padding: 10px;
 		margin-left: 100px;
@@ -78,16 +76,19 @@ p {
 <p id="author">
 
 <p><a href="http://parrt.cs.usfca.edu">Terence Parr</a> and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
-
-<p>(We teach in University of San Francisco's <a href="https://www.usfca.edu/arts-sciences/graduate-programs/data-science">MS in Data Science program</a> and have other nefarious projects underway. You might know Terence as the creator of the <a href="http://www.antlr.org">ANTLR parser generator</a>. For more material, see Jeremy's <a href="http://course.fast.ai">fast.ai courses</a> and University of San Francisco's Data Institute <a href="https://www.usfca.edu/data-institute/certificates/deep-learning-part-one">in-person version of the deep learning course</a>.)</p>
 </p>
 
 
 <p>
 
+<p>(We teach in University of San Francisco's <a href="https://www.usfca.edu/arts-sciences/graduate-programs/data-science">MS in Data Science program</a> and have other nefarious projects underway. You might know Terence as the creator of the <a href="http://www.antlr.org">ANTLR parser generator</a>. For more material, see Jeremy's <a href="http://course.fast.ai">fast.ai courses</a> and University of San Francisco's Data Institute <a href="https://www.usfca.edu/data-institute/certificates/deep-learning-part-one">in-person version of the deep learning course</a>.)</p>
+
 <p><a href="http://parrt.cs.usfca.edu/doc/matrix-calculus.pdf">Printable version</a> (This HTML was generated from markup using <a href="https://github.com/parrt/bookish">bookish</a>)</p>
+</p>
+
 
 <p><b>Abstract</b></p>
+<p>
 
 <p>This paper is an attempt to explain all the matrix calculus you need in order to understand the training of deep neural networks. We assume no math knowledge beyond what you learned in calculus 1, and provide links to help you refresh the necessary math where needed. Note that you do <b>not</b> need to understand this material before you start learning to train and use deep learning in practice; rather, this material is for those who are already familiar with the basics of neural networks, and wish to deepen their understanding of the underlying math. Don't worry if you get stuck at some point along the way---just go back and reread the previous section, and try writing down and working through some examples. And if you're still stuck, we're happy to answer your questions in the <a href="http://forums.fast.ai/c/theory">Theory category at forums.fast.ai</a>. <b>Note</b>: There is a <a href="#reference">reference section</a> at the end of the paper summarizing all the key matrix calculus rules and terminology discussed here.</p>
 </p>
@@ -182,7 +183,7 @@ p {
 <table style="">
 <thead>
 	<tr>
-		<th align=left>Rule</th><th align=left><img style="vertical-align: -3.4125pt;" src="images/eqn-50BBD36E1FD2333108437A2CA378BE62-depth003.25.svg"></th><th align=left>Scalar derivative notation with respect to <span class=eqn>x</span></th><th align=left>Example</th>
+		<th align=left width="20%">Rule</th><th align=left ><img style="vertical-align: -3.4125pt;" src="images/eqn-50BBD36E1FD2333108437A2CA378BE62-depth003.25.svg"></th><th align=left width="30%">Scalar derivative notation with respect to <span class=eqn>x</span></th><th align=left >Example</th>
 	</tr>
 </thead>
 <tbody>
@@ -299,7 +300,41 @@ p {
 "></div>
 
 <p>The Jacobian of the identity function <img style="vertical-align: -3.4125pt;" src="images/eqn-3ABE4A0471143ABFC180C9FA485E5F0A-depth003.25.svg">, with <img style="vertical-align: -3.4125pt;" src="images/eqn-E314355F5E2135483279531C62D7E8EC-depth003.25.svg">, has <span class=eqn>n</span> functions and each function has <span class=eqn>n</span> parameters held in a single vector <span class=eqnvec>x</span>. The Jacobian is, therefore, a square matrix since <img style="vertical-align: -0.5pt;" src="images/eqn-A193EBC083B4745370F6F1343383D9CC-depth000.14.svg">:</p>
-<div><img class="blkeqn" src="images/blkeqn-CBAF7F01D9FC6A11B6662469648FDB95.svg" alt=""></div>
+<div><img class="blkeqn" src="images/latex-EAAB93715A5C885A1F867EE3C1A2931A.svg" alt="
+\begin{eqnarray*}
+	\frac{\partial \mathbf{y}}{\partial \mathbf{x}} = \begin{bmatrix}
+	\frac{\partial}{\partial {x}} f_1(\mathbf{x}) \\
+	\frac{\partial}{\partial {x}} f_2(\mathbf{x})\\
+	\ldots\\
+	\frac{\partial}{\partial {x}} f_m(\mathbf{x})
+	\end{bmatrix} &=& \begin{bmatrix}
+	\frac{\partial}{\partial {x_1}} f_1(\mathbf{x})~ \frac{\partial}{\partial {x_2}} f_1(\mathbf{x}) ~\ldots~  \frac{\partial}{\partial {x_n}} f_1(\mathbf{x}) \\
+	\frac{\partial}{\partial {x_1}} f_2(\mathbf{x})~ \frac{\partial}{\partial {x_2}} f_2(\mathbf{x}) ~\ldots~  \frac{\partial}{\partial {x_n}} f_2(\mathbf{x}) \\
+	\ldots\\
+	~\frac{\partial}{\partial {x_1}} f_m(\mathbf{x})~ \frac{\partial}{\partial {x_2}} f_m(\mathbf{x}) ~\ldots~ \frac{\partial}{\partial {x_n}} f_m(\mathbf{x}) \\
+	\end{bmatrix}\\\\
+	& = & \begin{bmatrix}
+	\frac{\partial}{\partial {x_1}} x_1~ \frac{\partial}{\partial {x_2}} x_1 ~\ldots~ \frac{\partial}{\partial {x_n}} x_1 \\
+	\frac{\partial}{\partial {x_1}} x_2~ \frac{\partial}{\partial {x_2}} x_2 ~\ldots~ \frac{\partial}{\partial {x_n}} x_2 \\
+	\ldots\\
+	~\frac{\partial}{\partial {x_1}} x_n~ \frac{\partial}{\partial {x_2}} x_n ~\ldots~ \frac{\partial}{\partial {x_n}} x_n \\
+	\end{bmatrix}\\\\
+	& & (\text{and since } \frac{\partial}{\partial {x_j}} x_i = 0 \text{ for } j \neq i)\\
+	 & = & \begin{bmatrix}
+	\frac{\partial}{\partial {x_1}} x_1 & 0 & \ldots& 0 \\
+	0 & \frac{\partial}{\partial {x_2}} x_2 &\ldots & 0 \\
+	& & \ddots\\
+	0 & 0 &\ldots& \frac{\partial}{\partial {x_n}} x_n \\
+	\end{bmatrix}\\\\
+	 & = & \begin{bmatrix}
+	1 & 0 & \ldots& 0 \\
+	0 &1 &\ldots & 0 \\
+	& & \ddots\\
+	0 & 0 & \ldots &1 \\
+	\end{bmatrix}\\\\
+	& = & I ~~~(I \text{ is the identity matrix with ones down the diagonal})\\
+	\end{eqnarray*}
+"></div>
 
 <p>Make sure that you can derive each step above before moving on. If you get stuck, just consider each element of the matrix in isolation and apply the usual scalar derivative rules.   That is a generally useful trick: Reduce vector expressions down to a set of scalar expressions and then take all of the partials, combining the results appropriately into vectors and matrices at the end.</p>
 
@@ -416,256 +451,6 @@ p {
 <p>The chain rule is conceptually a divide and conquer strategy (like Quicksort) that breaks complicated expressions into subexpressions whose derivatives are easier to compute.  Its power derives from the fact that we can process each simple subexpression in isolation yet still combine the  intermediate results to get the correct overall result.</p>
 
 <p>The chain rule comes into play when we need the derivative of an expression composed of nested subexpressions. For example, we need the chain rule when confronted with expressions like <img style="vertical-align: -4.8089995pt;" src="images/eqn-06D67DC7FE74C1895AEF564F8295E918-depth004.58.svg">.  The outermost expression takes the <span class=eqn>sin</span> of an intermediate result, a nested subexpression that squares <span class=eqn>x</span>. Specifically, we need the single-variable chain rule, so let's start by digging into that in more detail.</p>
-
-<p><b>Single-variable chain rule</b></p>
-
-<p>Let's start with the solution to the derivative of our nested expression: <img style="vertical-align: -4.8089995pt;" src="images/eqn-AB5ECA885C5685990CD778580665B3A4-depth004.58.svg">.  It doesn't take a mathematical genius to recognize components of the solution that smack of scalar differentiation rules, <img style="vertical-align: -4.8089995pt;" src="images/eqn-1A32AA532898DEBB80C0C7A818C5C70B-depth004.58.svg"> and <img style="vertical-align: -4.8089995pt;" src="images/eqn-DC7C2E5FB11394451EA6A2010904F0B2-depth004.58.svg">. It looks like the solution is to multiply the derivative of the outer expression by the derivative of the inner expression or "chain the pieces together," which is exactly right. In this section, we'll explore the general principle at work and provide a process that works for highly-nested expressions of a single variable.</p>
-
-<p>Chain rules are typically defined in terms of nested functions, such as <img style="vertical-align: -3.4125pt;" src="images/eqn-281717E562B6C04AA861AC9F2801D016-depth003.25.svg"> for single-variable chain rules. (You will also see the chain rule defined using function composition <img style="vertical-align: -3.4125pt;" src="images/eqn-88806005B64072FE5A06E4E609A9E251-depth003.25.svg">, which is the same thing.)  Some sources write the derivative using shorthand notation <img style="vertical-align: -3.4125pt;" src="images/eqn-3D59985B51738C2BF54BA3D955AB8588-depth003.25.svg">, but that hides the fact that we are introducing an intermediate variable: <img style="vertical-align: -3.4125pt;" src="images/eqn-8C36385E70550C1C0EA86E14320174DF-depth003.25.svg">, which we'll see shortly. It's better to define the <a href="http://m.wolframalpha.com/input/?i=chain+rule">single-variable chain rule</a> of <img style="vertical-align: -3.4125pt;" src="images/eqn-8BC3A7E80988236E8F017205F413461C-depth003.25.svg"> explicitly so we never take the derivative with respect to the wrong variable. Here is the formulation of the single-variable chain rule we recommend:</p>
-<div><img class="blkeqn" src="images/blkeqn-9D3919C42833D1FF1456DEA11D8CC927.svg" alt=""></div>
-
-<p>To deploy the single-variable chain rule, follow these steps:</p>
-<ol>
-<li>Introduce intermediate variables for nested subexpressions and subexpressions for both binary and unary operators; e.g., <img style="vertical-align: -1.08pt;" src="images/eqn-60C13E05D3EC8C10B8564EAE7023D9DB-depth001.08.svg"> is binary, <img style="vertical-align: -3.4125pt;" src="images/eqn-6FFE53F1F614CC1D470F85B6C56A3AFB-depth003.25.svg"> and other trigonometric functions are usually unary because there is a single operand. This step normalizes all equations to single operators or function applications.</li>
-<li>Compute derivatives of the intermediate variables with respect to their parameters.</li>
-<li>Combine all derivatives of intermediate variables by multiplying them together to get the overall result.</li>
-<li>Substitute intermediate variables back in if any are referenced in the derivative equation.</li>
-</ol>
-
-<p>The third step puts the "chain" in "chain rule" because it chains together intermediate results. Multiplying the intermediate derivatives together is the common theme among all variations of the chain rule.</p>
-
-<p>Let's try  this process on <img style="vertical-align: -3.4125pt;" src="images/eqn-872F24FC57CA661E3704C0A10869C6B5-depth003.25.svg">:</p>
-<ol>
-<li>Introduce intermediate variables. Let <img style="vertical-align: -0.5pt;" src="images/eqn-FA510039FEDBE5A935A70EF6E3B46394-depth000.14.svg"> represent subexpression <img style="vertical-align: -0.5pt;" src="images/eqn-32F5240D0DBF2CCBE75EF7F8EF2015E0-depth000.14.svg"> (shorthand for <img style="vertical-align: -3.4125pt;" src="images/eqn-879B57F3F479F58707D2477B46B060CF-depth003.25.svg">). This gives us:
-
-<p>   </p>
-<div><img class="blkeqn" src="images/blkeqn-165CA85C4E868C4589FDC97854EF5AFE.svg" alt=""></div>
-
-<p>The order of these subexpressions does not affect the answer, but we recommend working in the reverse order of operations dictated by the nesting (innermost to outermost). That way, expressions and derivatives are always functions of previously-computed elements. </p>
-</li>
-<li>Compute derivatives.
-<div><img class="blkeqn" src="images/blkeqn-33DB49B9B2BFE622EF83565332547027.svg" alt=""></div>
-</li>
-<li>Combine.
-<div><img class="blkeqn" src="images/blkeqn-9D1B1984635759F4C2D23464EBBAA995.svg" alt=""></div>
-</li>
-<li>Subtitute.
-<div><img class="blkeqn" src="images/blkeqn-6E1052BD462233E4BEA04D695437A984.svg" alt=""></div>
-</li>
-</ol>
-
-<p>Notice how easy it is to compute the derivatives of the intermediate variables in isolation! The chain rule says it's legal to do that and tells us how to combine the intermediate results to get <img style="vertical-align: -3.4125pt;" src="images/eqn-E4D3AF86AC3E4315148DA23A886A72EA-depth003.25.svg">.</p>
-
-<p>You can think of the combining step of the chain rule in terms of units canceling. If we let <span class=eqn>y</span> be gallons of gas, <span class=eqn>x</span> be the gallons in a gas tank, and <span class=eqn>u</span> as miles we can interpret <img style="vertical-align: -4.8089995pt;" src="images/eqn-70047C98E4163674E78BB42D0CF4AEA8-depth004.58.svg"> as <img style="vertical-align: -6.657pt;" src="images/eqn-F98E0EBA888E860C7E51565C7225EBFA-depth006.34.svg">. The <span class=eqn>gallon</span> denominator and numerator cancel.</p>
-
-<p>Another way to to think about the single-variable chain rule is to visualize the overall expression as a dataflow diagram or chain of operations (or <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">abstract syntax tree</a> for compiler people):</p>
-<center>
-<img src="images/sin-square.png" alt="sin-square.png" width="130">
-</center>
-
-<p>Changes to function parameter <span class=eqn>x</span> bubble up through a squaring operation then through a <span class=eqn>sin</span> operation to change result <span class=eqn>y</span>. You can think of <img style="vertical-align: -4.8089995pt;" src="images/eqn-B13DB657CBF4B8318DBF2799E687D1A1-depth004.58.svg"> as "getting changes from <span class=eqn>x</span> to <span class=eqn>u</span>" and <img style="vertical-align: -4.8089995pt;" src="images/eqn-6E939E305B65D08F88FF95E7E028796B-depth004.58.svg"> as "getting changes from <span class=eqn>u</span> to <span class=eqn>y</span>." Getting from <span class=eqn>x</span> to <span class=eqn>y</span> requires an intermediate hop. The chain rule is, by convention, usually written from the output variable down to the parameter(s), <img style="vertical-align: -4.8089995pt;" src="images/eqn-70047C98E4163674E78BB42D0CF4AEA8-depth004.58.svg">. But, the <span class=eqn>x</span>-to-<span class=eqn>y</span> perspective would be more clear if we reversed the flow and used the equivalent <img style="vertical-align: -4.8089995pt;" src="images/eqn-256F5475DE15D99D8D55FE6F3A15CEA4-depth004.58.svg">.</p>
-
-<p><b>Conditions under which the single-variable chain rule applies</b>. Notice that there is a single dataflow path from <span class=eqn>x</span> to the root <span class=eqn>y</span>.  Changes in <span class=eqn>x</span> can influence output <span class=eqn>y</span> in only one way.  That is the condition under which we can apply the single-variable chain rule. An easier condition to remember, though one that's a bit looser, is that none of the intermediate subexpression functions, <img style="vertical-align: -3.4125pt;" src="images/eqn-3BCB9E96DA63C9CDC1E56647C2071688-depth003.25.svg"> and <img style="vertical-align: -3.4125pt;" src="images/eqn-C6E9D6FA0C33AA632E25E953C6E5C35D-depth003.25.svg">, have more than one parameter.  Consider <img style="vertical-align: -3.4125pt;" src="images/eqn-026E2EF5E8E6906B6CE75FF6CDB0F14E-depth003.25.svg">, which would become <img style="vertical-align: -3.4125pt;" src="images/eqn-A1829C9E1CDCFF4FE0BA9C0E7A70E635-depth003.25.svg"> after introducing intermediate variable <span class=eqn>u</span>.  As we'll see in the next section, <img style="vertical-align: -3.4125pt;" src="images/eqn-2C284C56D6E912E6D71990A11005902E-depth003.25.svg"> has multiple paths from <span class=eqn>x</span> to <span class=eqn>y</span>. To handle that situation, we'll deploy the single-variable total-derivative chain rule.</p>
-
-<p><div style="border:1px;border-style:solid; padding=5">As an aside for those interested in automatic differentiation, papers and library documentation use terminology <i>forward differentiation</i> and <i>backward differentiation</i> (for use in the back-propagation algorithm). From a dataflow perspective, we are computing a forward differentiation because it follows the normal data flow direction.  Backward differentiation, naturally, goes the other direction and we're asking how a change in the output would affect function parameter <span class=eqn>x</span>. Because backward differentiation can determine changes in all function parameters at once, it turns out to be much more efficient for computing the derivative of functions with lots of parameters. Forward differentiation, on the other hand, must consider how a change in each parameter, in turn, affects the function output <span class=eqn>y</span>.</p>
-<center>
-<table style="">
-<thead>
-	<tr>
-		<th align=left>Forward differentiation from <span class=eqn>x</span> to <span class=eqn>y</span></th><th align=left>Backward differentiation from <span class=eqn>y</span> to <span class=eqn>x</span></th>
-	</tr>
-</thead>
-<tbody>
-	<tr>
-		<td align=left><img style="vertical-align: -4.8089995pt;" src="images/eqn-256F5475DE15D99D8D55FE6F3A15CEA4-depth004.58.svg"></td><td align=left><img style="vertical-align: -4.8089995pt;" src="images/eqn-70047C98E4163674E78BB42D0CF4AEA8-depth004.58.svg"></td>
-	</tr>
-</tbody>
-</table>
-</center>
-
-<p>Automatic differentiation is beyond the scope of this article, but we're setting the stage for a future article.</div></p>
-
-<p>Many readers can solve <img style="vertical-align: -4.8089995pt;" src="images/eqn-59B8E919C92D6DBE1DC50C5BE2CD8C1C-depth004.58.svg"> in their heads, but our goal is a process that will work even for  very complicated expressions. This process is also how <a href="https://en.wikipedia.org/wiki/Automatic_differentiation">automatic differentiation</a> works in libraries like PyTorch. So, by solving derivatives manually  in this way, you're also learning how to define functions for custom neural networks in PyTorch.</p>
-
-<p>With deeply nested expressions, it helps to think about deploying the chain rule the way a compiler unravels nested function calls like <img style="vertical-align: -3.4125pt;" src="images/eqn-7559A5FC5EC5CA0B3E50011742D0A87B-depth003.25.svg"> into a sequence (chain) of calls. The result of calling function <span class=eqn>f<sub>i</sub></span> is saved to a temporary variable called a register, which is then passed as a parameter to <img style="vertical-align: -2.856pt;" src="images/eqn-36930D135F4763C21D1191803AC41B85-depth002.72.svg">.  Let's see how that looks in practice by using our process on a highly-nested equation like <img style="vertical-align: -3.4125pt;" src="images/eqn-642FD3E590A2B2D21AFE5254BE8E832F-depth003.25.svg">:</p>
-<ol>
-<li>Introduce intermediate variables.
-<div><img class="blkeqn" src="images/blkeqn-A153933499426CFC383D252C30A87953.svg" alt=""></div>
-</li>
-<li> Compute derivatives.
-<div><img class="blkeqn" src="images/blkeqn-4561212E91367D4B2DCC40262E36921D.svg" alt=""></div>
-</li>
-<li> Combine four intermediate values.
-<div><img class="blkeqn" src="images/blkeqn-2CF824877C0FB75B7648CE66E56FB509.svg" alt=""></div>
-</li>
-<li> Subtitute.
-<div><img class="blkeqn" src="images/blkeqn-9BC49A78C13740AC58294EAA333AF3CC.svg" alt=""></div>
-</li>
-</ol>
-
-<p>Here is a visualization of the data flow through the chain of operations from <span class=eqn>x</span> to <span class=eqn>y</span>:</p>
-<center>
-<img src="images/chain-tree.png" alt="chain-tree.png" width="150">
-</center>
-
-<p>At this point, we can handle derivatives of nested expressions of a single variable, <span class=eqn>x</span>, using the chain rule but only if <span class=eqn>x</span> can affect <span class=eqn>y</span> through a single data flow path. To handle more complicated expressions, we need to extend our technique, which we'll do next.</p>
-
-<p><b>Single-variable total-derivative chain rule</b></p>
-
-<p>Our single-variable chain rule has limited applicability because all intermediate variables must be functions of single variables. But, it demonstrates the core mechanism of the chain rule, that of multiplying out all derivatives of intermediate subexpressions. To handle more general expressions such as <img style="vertical-align: -3.4125pt;" src="images/eqn-4E2EFF28C6823738FA61BFC9A3DD6D0F-depth003.25.svg">, however, we need to augment that basic chain rule.</p>
-
-<p>Of course, we immediately see <img style="vertical-align: -4.8089995pt;" src="images/eqn-18EF15EC4DDA421BE5BC86F0295D36CD-depth004.58.svg">, but that is using the scalar  addition derivative rule, not the chain rule.  If we tried to apply the single-variable chain rule, we'd get the wrong answer. In fact, the previous chain rule is meaningless in this case because derivative operator <img style="vertical-align: -4.8089995pt;" src="images/eqn-624FEBB9A49A3FC96353C861D175C806-depth004.58.svg"> does not apply to multivariate functions, such as <img style="vertical-align: -2.0475pt;" src="images/eqn-89AE78BE880A004AA5404AC874A01BFF-depth001.95.svg"> among our intermediate variables:</p>
-<div><img class="blkeqn" src="images/blkeqn-5CB23F92FE51ABF1B1885A985EA61BC6.svg" alt=""></div>
-
-<p>Let's try it anyway to see what happens. If we pretend that <img style="vertical-align: -6.1424994pt;" src="images/eqn-400C939294CFCAC13949F5A92DD9537A-depth005.85.svg"> and <img style="vertical-align: -4.8089995pt;" src="images/eqn-8B1AAFE58A962E6F06775EBD2808D5FE-depth004.58.svg">, then <img style="vertical-align: -6.1424994pt;" src="images/eqn-69A0BF0F0F217A5C8CDB490B4C60ABEE-depth005.85.svg"> instead of the right answer <img style="vertical-align: -1.06pt;" src="images/eqn-632334BF7A82AE1CEB6BF98756648B4E-depth001.06.svg">.  </p>
-
-<p>Because <img style="vertical-align: -3.4125pt;" src="images/eqn-3DD76E5D04C44A4E7170558B8BFE3219-depth003.25.svg"> has multiple parameters, partial derivatives come into play. Let's blindly apply the partial derivative operator to all of our equations and see what we get:</p>
-<div><img class="blkeqn" src="images/blkeqn-7A7B19296641D8B6B96136527F381589.svg" alt=""></div>
-
-<p>Ooops! The partial <img style="vertical-align: -4.9035pt;" src="images/eqn-9A001AB7445AD6C36176920C0E5D253F-depth004.67.svg"> is wrong because it violates a key assumption for partial derivatives. When taking the partial derivative with respect to <span class=eqn>x</span>, the other variables must not vary as <span class=eqn>x</span> varies. Otherwise, we could not act as if the other variables were constants. Clearly, though, <img style="vertical-align: -3.4125pt;" src="images/eqn-0F0BF7F8711E6437357749F43EF529D8-depth003.25.svg"> is a function of <span class=eqn>x</span> and therefore varies with <span class=eqn>x</span>. <img style="vertical-align: -4.9035pt;" src="images/eqn-78D6E87F2E36D9F4C482E9236F997C4C-depth004.67.svg"> because <img style="vertical-align: -4.9035pt;" src="images/eqn-C9E3A40CD8239D58296F30B000154F1A-depth004.67.svg">. A quick look at the data flow diagram for <img style="vertical-align: -3.4125pt;" src="images/eqn-AC2672C7A79B0E068FB3AC3D7FBF94C9-depth003.25.svg"> shows multiple paths from <span class=eqn>x</span> to <span class=eqn>y</span>, thus, making it clear we need to consider direct and indirect (through <img style="vertical-align: -3.4125pt;" src="images/eqn-D8F3471EF0522DC14012F0DC5D01D570-depth003.25.svg">) dependencies on <span class=eqn>x</span>:</p>
-<center>
-<img src="images/plus-square.png" alt="plus-square.png" width="150">
-</center>
-
-<p>A change in <span class=eqn>x</span> effects <span class=eqn>y</span> both as an operand of the addition and as the operand of the square operator. Here's an equation that describes how tweaks to <span class=eqn>x</span> affect the output:</p>
-<div><img class="blkeqn" src="images/blkeqn-69B14AB41D9A7514E8C105FDDF9649C5.svg" alt=""></div>
-
-<p>Then, <img style="vertical-align: -2.7825pt;" src="images/eqn-461DF6ABE0C0386D728B786B3116A5B1-depth002.65.svg">.</p>
-
-<p>If we let <img style="vertical-align: -0.5pt;" src="images/eqn-A255512F9D61A6777BD5A304235BD26D-depth000.14.svg">, then <img style="vertical-align: -2.7825pt;" src="images/eqn-433AD860B59D47738D7AECAB6367A8AD-depth002.65.svg">. If we bump <span class=eqn>x</span> by 1, <img style="vertical-align: -0.5pt;" src="images/eqn-60BD3A416346416B27D420F8EFEE9C9E-depth000.14.svg">, then <img style="vertical-align: -3.4125pt;" src="images/eqn-4DCF3FC9093036B469E832AEDCFDA608-depth003.25.svg">. The change in <span class=eqn>y</span> is not <img style="vertical-align: -0.5pt;" src="images/eqn-C4CA4238A0B923820DCC509A6F75849B-depth000.00.svg">, as <img style="vertical-align: -3.4125pt;" src="images/eqn-BE27DFA2B74F7608759BD413AF458EB2-depth003.25.svg"> would lead us to believe, but <img style="vertical-align: -1.08pt;" src="images/eqn-F0B6923B35563AE91BDFC8B06222E495-depth001.08.svg">!</p>
-
-<p>Enter the "law" of <a href="https://en.wikipedia.org/wiki/Total_derivative">total derivatives</a>, which basically says that to compute <img style="vertical-align: -4.8089995pt;" src="images/eqn-3BAFFD623D24688B6229E8808F4DD24A-depth004.58.svg">, we need to sum up all possible contributions from changes in <span class=eqn>x</span> to the change in <span class=eqn>y</span>. The total derivative with respect to <span class=eqn>x</span> assumes all variables, such as <img style="vertical-align: -2.0475pt;" src="images/eqn-D33DEF0EB4933F91B88EB4E784ADAF05-depth001.95.svg"> in this case, are functions of <span class=eqn>x</span> and potentially vary as <span class=eqn>x</span> varies.   The total derivative of <img style="vertical-align: -3.4125pt;" src="images/eqn-20596CA2E264644A086ABF3ABCA89367-depth003.25.svg"> that depends on <span class=eqn>x</span> directly and indirectly via intermediate variable <img style="vertical-align: -3.4125pt;" src="images/eqn-D8F3471EF0522DC14012F0DC5D01D570-depth003.25.svg"> is given by:</p>
-<div><img class="blkeqn" src="images/blkeqn-09EB861D79D7E60D9B37567CE097631B.svg" alt=""></div>
-
-<p>Using this formula, we get the proper answer:</p>
-<div><img class="blkeqn" src="images/blkeqn-217390CDB48372744AC16E8277C9D0CC.svg" alt=""></div>
-
-<p>That is an application of what we can call the <i>single-variable total-derivative chain rule</i>:</p>
-<div><img class="blkeqn" src="images/blkeqn-4586E8ADC3AA440DD41501217E7B6E67.svg" alt=""></div>
-
-<p>The total derivative assumes all variables are potentially codependent whereas the partial derivative assumes all variables but <span class=eqn>x</span> are constants.</p>
-
-<p>There is something subtle going on here with the notation. All of the derivatives are shown as partial derivatives because <span class=eqn>f</span> and <span class=eqn>u<sub>i</sub></span> are functions of multiple variables. This notation mirrors that of <a href="http://mathworld.wolfram.com/TotalDerivative.html">MathWorld's notation</a> but differs from  <a href="https://en.wikipedia.org/wiki/Total_derivative">Wikipedia</a>, which uses <img style="vertical-align: -3.4125pt;" src="images/eqn-8A4956B34F845398E8CB25E9789E1477-depth003.25.svg"> instead (possibly to emphasize the total derivative nature of the equation). We'll stick with the partial derivative notation so that it's consistent with our discussion of the vector chain rule in the next section.</p>
-
-<p>In practice, just keep in mind that when you take the total derivative with respect to <span class=eqn>x</span>, other variables might also be functions of <span class=eqn>x</span> so add in their contributions as well.  The left side of the equation looks like a typical partial derivative but the right-hand side is actually the total derivative.  It's common, however, that many temporary variables are functions of a single parameter, which means that the single-variable total-derivative chain rule degenerates to the single-variable chain rule.</p>
-
-<p>Let's look at a nested subexpression, such as <img style="vertical-align: -3.4125pt;" src="images/eqn-FD3AC7E953C3B294864C747188F6F370-depth003.25.svg">.  We introduce three intermediate variables:</p>
-<div><img class="blkeqn" src="images/blkeqn-B5215A178D5EDFCCA280ED63D64A8025.svg" alt=""></div>
-
-<p>and partials:</p>
-<div><img class="blkeqn" src="images/blkeqn-C3A02B93F5C0F2C8979E524BB28D35AC.svg" alt=""></div>
-
-<p>where both <img style="vertical-align: -4.9035pt;" src="images/eqn-A5D73F881FB427D3CD136DA4815CACA4-depth004.67.svg"> and <img style="vertical-align: -4.9035pt;" src="images/eqn-110F22244D49C5AD607D2BEFE91944A5-depth004.67.svg"> have <img style="vertical-align: -4.9035pt;" src="images/eqn-4E8A57E5001AA58AEAA927CF98746B9C-depth004.67.svg"> terms that take into account the total derivative.</p>
-
-<p>Also notice that the total derivative formula always <b>sums</b> versus, say, multiplies terms <img style="vertical-align: -6.2159996pt;" src="images/eqn-935DA2BFCBE67A179A8DAAB35E19A1DA-depth005.92.svg">.  It's tempting to think that summing up terms in the derivative makes sense because, for example, <img style="vertical-align: -2.7825pt;" src="images/eqn-FCCD52402617C355E7BB85B3336D0142-depth002.65.svg"> adds two terms. Nope. The total derivative is adding terms because it represents a weighted sum of all <span class=eqn>x</span> contributions to the change in <span class=eqn>y</span>. For example, given <img style="vertical-align: -2.7825pt;" src="images/eqn-5C5A09876AA823C381141FDAC1D28BA6-depth002.65.svg"> instead of <img style="vertical-align: -2.7825pt;" src="images/eqn-C26DA96086B50304FCE872846D4BE19F-depth002.65.svg">, the total-derivative chain rule formula still adds partial derivative terms. (<img style="vertical-align: -1.08pt;" src="images/eqn-94E561C972A5FE1DDE82761012FB6DB1-depth001.08.svg">  simplifies to <img style="vertical-align: -0.5pt;" src="images/eqn-8C0FB3B076D9AEA142467B34F0F794EB-depth000.14.svg"> but for this demonstration, let's not combine the terms.) Here are the intermediate variables and partial derivatives:</p>
-<div><img class="blkeqn" src="images/blkeqn-A1BE672D8676E7C9DE634935C1CDEBBA.svg" alt=""></div>
-
-<p>The form of the total derivative remains the same, however:</p>
-<div><img class="blkeqn" src="images/blkeqn-50D1EABA22B46536559D83F8C21F749D.svg" alt=""></div>
-
-<p>It's the partials (weights) that change, not the formula, when the intermediate variable operators change.</p>
-
-<p>Those readers with a strong calculus background might wonder why we aggressively introduce intermediate variables even for the non-nested subexpressions such as <img style="vertical-align: -0.5pt;" src="images/eqn-32F5240D0DBF2CCBE75EF7F8EF2015E0-depth000.14.svg"> in <img style="vertical-align: -1.06pt;" src="images/eqn-06671AD4FF442E623460886DA749C797-depth001.06.svg">. We use this process for three reasons: (i) computing the derivatives for the simplified subexpressions is usually trivial, (ii) we can simplify the chain rule, and (iii) the process mirrors how automatic differentiation works in neural network libraries.</p>
-
-<p>Using the intermediate variables even more aggressively, let's see how we can simplify our single-variable total-derivative chain rule to its final form. The goal is to get rid of the the <img style="vertical-align: -4.9035pt;" src="images/eqn-F6E0346D1D3410B0FBE32B41B85999AA-depth004.67.svg"> sticking out on the front like a sore thumb:</p>
-<div><img class="blkeqn" src="images/blkeqn-D8F0438A2B5867000190B7AB280DDD9A.svg" alt=""></div>
-
-<p>We can achieve that by simply introducing a new temporary variable as an alias for <span class=eqn>x</span>: <img style="vertical-align: -2.8244998pt;" src="images/eqn-80A59ADB26E30571A3056E2EB3E8DDCB-depth002.69.svg">. Then, the formula reduces to our final form (implicitly bumping <span class=eqn>n</span> up by one):</p>
-<div><img class="blkeqn" src="images/blkeqn-962EFB01692576F5CB2A5EAA9F7391E4.svg" alt=""></div>
-
-<p>This chain rule that takes into consideration the total derivative degenerates to the single-variable chain rule when all intermediate variables are functions of a single variable.   Consequently, you can remember this more general formula to cover both cases.  As a bit of dramatic foreshadowing, notice that the summation sure looks like a vector dot product, <img style="vertical-align: -4.9035pt;" src="images/eqn-3F95AED50A8E6A5C514952D767B771CE-depth004.67.svg">, or  a vector multiply <img style="vertical-align: -4.9035pt;" src="images/eqn-51D7B0B0455FB229AB4920E9CA4AB032-depth004.67.svg">. </p>
-
-<p>Before we move on, a word of caution about terminology on the web. Unfortunately, the chain rule given in this section, based upon the total derivative, is universally called "multivariable chain rule" in calculus discussions, which is highly misleading! Only the intermediate variables are multivariate functions. The overall function, say, <img style="vertical-align: -3.4125pt;" src="images/eqn-A5A7963264669BCFA0CCFA897853A1E0-depth003.25.svg">, is a scalar function that accepts a single parameter <span class=eqn>x</span>. The derivative and parameter are scalars, not vectors, as one would expect with a so-called multivariate chain rule.  (Within the context of a non-matrix calculus class, "multivariate chain rule" is likely unambiguous.) To reduce confusion, we use "single-variable total-derivative chain rule" to spell out the distinguishing feature between the simple single-variable chain rule, <img style="vertical-align: -4.8089995pt;" src="images/eqn-9D3919C42833D1FF1456DEA11D8CC927-depth004.58.svg">, and this one. </p>
-
-<p><b>Vector chain rule</b></p>
-
-<p>Now that we've got a good handle on the total-derivative chain rule, we're ready to tackle the chain rule for vectors of functions and vector variables. Surprisingly, this more general chain rule is just as simple looking as the single-variable chain rule for scalars. Rather than just presenting the vector chain rule, let's rediscover it ourselves so we get a firm grip on it. We can start by computing the derivative of a sample vector function with respect to a scalar, <img style="vertical-align: -3.4125pt;" src="images/eqn-82C28F66A012D28717CA0CFC8ED7F09B-depth003.25.svg">, to see if we can abstract a general formula.   </p>
-<div><img class="blkeqn" src="images/blkeqn-428F0EFA4C7B2EEC64829258E8DAFF86.svg" alt=""></div>
-
-<p>Let's introduce two intermediate variables, <img style="vertical-align: -2.7825pt;" src="images/eqn-E11BA37D5D784AF689E175BEC8A2F284-depth002.65.svg"> and <img style="vertical-align: -2.7825pt;" src="images/eqn-D7F116997176D81A3BBD4E6DFC6FE6B0-depth002.65.svg">, one for each <span class=eqn>f<sub>i</sub></span> so that <span class=eqn>y</span> looks more like <img style="vertical-align: -3.4125pt;" src="images/eqn-C5AF10997DA85D7540CDF87F1F10016C-depth003.25.svg">:</p>
-<div><img class="blkeqn" src="images/blkeqn-5CE597B34A604EDC0DD0B1AD97CFD690.svg" alt=""></div>
-<div><img class="blkeqn" src="images/blkeqn-E04563108617169E3793740388785DAB.svg" alt=""></div>
-
-<p>The derivative of vector <span class=eqnvec>y</span> with respect to scalar <span class=eqn>x</span> is a vertical vector with elements computed using the single-variable total-derivative chain rule:</p>
-<div><img class="blkeqn" src="images/blkeqn-63BFCE8E2B4E8F603E209ECA0C1DADCE.svg" alt=""></div>
-
-<p>Ok, so now we have the answer using just the scalar rules, albeit with the derivatives grouped into a vector. Let's try to abstract from that result what it looks like in vector form.  The goal is to convert the following vector of scalar operations to a vector operation. </p>
-<div><img class="blkeqn" src="images/blkeqn-0EA3C72DBB9F820121EE6A27D76EC7CC.svg" alt=""></div>
-
-<p>If we split the <img style="vertical-align: -7.5705pt;" src="images/eqn-97D1ACA90CB316ED8AE1EDFFAED02C77-depth007.21.svg"> terms, isolating the <img style="vertical-align: -4.9035pt;" src="images/eqn-D513134B704605A9687A47F8841D7D29-depth004.67.svg"> terms into a vector, we get a matrix by vector multiplication:</p>
-<div><img class="blkeqn" src="images/blkeqn-692581F3416029FED8E1CE09890F4A5E.svg" alt=""></div>
-
-<p>That means that the Jacobian is the multiplication of two other Jacobians, which is kinda cool.  Let's check our results:</p>
-<div><img class="blkeqn" src="images/blkeqn-4A8689EA58BF9FA2AF675AAE0C093010.svg" alt=""></div>
-
-<p>Whew!  We get the same answer as the scalar approach. This vector chain rule for vectors of functions and a single parameter appears to be correct and, indeed, mirrors the single-variable chain rule. Compare the vector rule:</p>
-<div><img class="blkeqn" src="images/blkeqn-B0D7932C93DA81FD62418DA5DF3CBE14.svg" alt=""></div>
-
-<p>with the single-variable chain rule:</p>
-<div><img class="blkeqn" src="images/blkeqn-8617320E088DCA9EC6795865C614324A.svg" alt=""></div>
-
-<p>To make this formula work for multiple parameters or vector <span class=eqnvec>x</span>, we just have to change <span class=eqn>x</span> to vector <span class=eqnvec>x</span> in the equation.  The effect is  that <img style="vertical-align: -4.9035pt;" src="images/eqn-A24633DDE0B5346B4AE6B49395AC8B6D-depth004.67.svg"> and the resulting Jacobian,  <img style="vertical-align: -4.9035pt;" src="images/eqn-A9A13E2AE753365278B4F2CD198BBF92-depth004.67.svg">, are now matrices instead of  vertical vectors. Our complete <i>vector chain rule</i> is:</p>
-<div><img class="blkeqn" src="images/blkeqn-63A95E8A883CCB871C2C68B2D8B6EAA4.svg" alt=""></div>
-
-<p>The beauty of the vector formula over the single-variable chain rule is that it automatically takes into consideration the total derivative while maintaining the same notational simplicity.  The Jacobian contains all possible combinations of <span class=eqn>f<sub>i</sub></span> with respect to <span class=eqn>g<sub>j</sub></span> and <span class=eqn>g<sub>i</sub></span> with respect to <span class=eqn>x<sub>j</sub></span>. For completeness, here are the two Jacobian components in their full glory:</p>
-<div><img class="blkeqn" src="images/blkeqn-875D6B48E0F3610A491D91FA12067AED.svg" alt=""></div>
-
-<p>where <img style="vertical-align: -3.4125pt;" src="images/eqn-99ADCB62C02EE5D10CC7B5F211BFA15B-depth003.25.svg">, <img style="vertical-align: -3.4125pt;" src="images/eqn-6E37471488C004C0ABACDF4148B8F3D6-depth003.25.svg">, and <img style="vertical-align: -3.4125pt;" src="images/eqn-26312045D51B3E69C8357FF7FAF3BB3F-depth003.25.svg">. The resulting Jacobian is <img style="vertical-align: -1.08pt;" src="images/eqn-FBFEB9C8459FEE5A2BD529C07B881153-depth001.08.svg"> (an <img style="vertical-align: -1.08pt;" src="images/eqn-2DC13003CC069B1027F12896B1A00631-depth001.08.svg"> matrix multiplied by a <img style="vertical-align: -1.08pt;" src="images/eqn-6D999BBC8A6ECBB820C04121088529A1-depth001.08.svg"> matrix). </p>
-
-<p>Even within this <img style="vertical-align: -6.5414996pt;" src="images/eqn-A7896E2D919F33CF607DC9E972C70458-depth006.23.svg"> formula, we can simplify further because, for many applications, the Jacobians are square (<img style="vertical-align: -0.5pt;" src="images/eqn-A193EBC083B4745370F6F1343383D9CC-depth000.14.svg">) and the off-diagonal entries are zero.  It is the nature of neural networks that the associated mathematics deals with functions of vectors not vectors of functions. For example, the neuron affine function has term <img style="vertical-align: -3.4125pt;" src="images/eqn-DE94554BD6F158BD8A829624C65169F4-depth003.25.svg"> and the activation function is <img style="vertical-align: -3.4125pt;" src="images/eqn-EA2DFCC1C759A6D2EE675EBD05B2C593-depth003.25.svg">; we'll consider derivatives of these functions in the next section.  </p>
-
-<p>As we saw in a previous section, element-wise operations on vectors <span class=eqnvec>w</span> and <span class=eqnvec>x</span> yield diagonal matrices with elements <img style="vertical-align: -6.2159996pt;" src="images/eqn-D840B92230E9F1C5F2545BCA90B34038-depth005.92.svg"> because <span class=eqn>w<sub>i</sub></span> is a function purely of <span class=eqn>x<sub>i</sub></span> but not <span class=eqn>x<sub>j</sub></span> for <img style="vertical-align: -2.856pt;" src="images/eqn-B064F8555EC660F2F8BDC927D9636A06-depth002.72.svg">. The same thing happens here when <span class=eqn>f<sub>i</sub></span> is purely a function of <span class=eqn>g<sub>i</sub></span> and <span class=eqn>g<sub>i</sub></span> is purely a function of <span class=eqn>x<sub>i</sub></span>:</p>
-<div><img class="blkeqn" src="images/blkeqn-4869BA6DCF2C9A404EECD993808A74B7.svg" alt=""></div>
-<div><img class="blkeqn" src="images/blkeqn-8866C26258F279CD69740D3A26C0CD90.svg" alt=""></div>
-
-<p>In this situation, the vector chain rule simplifies to:</p>
-<div><img class="blkeqn" src="images/blkeqn-2D82A2CFEA0A49E9B7D3C8F986DAF14A.svg" alt=""></div>
-
-<p>Therefore, the Jacobian reduces to a diagonal matrix whose elements are the single-variable chain rule values.</p>
-
-<p>After slogging through all of that mathematics, here's the payoff. All you need is the vector chain rule because the single-variable formulas are special cases of the vector chain rule. The following table summarizes the appropriate components to multiply in order to get the Jacobian.</p>
-<div><img class="blkeqn" src="images/latex-17BE59DB8766A07658ADAA8522995C53.svg" alt="
-\begin{tabular}[t]{c|cccc}
-  & 
-\multicolumn{2}{c}{
-  \begin{tabular}[t]{c}
-  scalar\\
-  \framebox(18,18){$x$}\\
-  \end{tabular}} & &\begin{tabular}{c}
-  vector\\
-  \framebox(18,40){$\mathbf{x}$}\\
-  \end{tabular} \\
-  
-  \begin{tabular}{c}$\frac{\partial}{\partial \mathbf{x}} \mathbf{f}(\mathbf{g}(\mathbf{x}))$
-	   = $\frac{\partial \mathbf{f}}{\partial \mathbf{g}}\frac{\partial\mathbf{g}}{\partial \mathbf{x}}$
-		\\
-		\end{tabular} & \begin{tabular}[t]{c}
-  scalar\\
-  \framebox(18,18){$u$}\\
-  \end{tabular} & \begin{tabular}{c}
-  vector\\
-  \framebox(18,40){$\mathbf{u}$}
-  \end{tabular}& & \begin{tabular}{c}
-  vector\\
-  \framebox(18,40){$\mathbf{u}$}\\
-  \end{tabular} \\
-\hline
-\\[\dimexpr-\normalbaselineskip+5pt]
-
-\begin{tabular}[b]{c}
-  scalar\\
-  \framebox(18,18){$f$}\\
-  \end{tabular} &\framebox(18,18){$\frac{\partial f}{\partial {u}}$} \framebox(18,18){$\frac{\partial u}{\partial {x}}$} ~~~& \raisebox{22pt}{\framebox(40,18){$\frac{\partial f}{\partial {\mathbf{u}}}$}} \framebox(18,40){$\frac{\partial \mathbf{u}}{\partial x}$} & ~~~&
-\raisebox{22pt}{\framebox(40,18){$\frac{\partial f}{\partial {\mathbf{u}}}$}} \framebox(40,40){$\frac{\partial \mathbf{u}}{\partial \mathbf{x}}$}
-\\
-  
-\begin{tabular}[b]{c}
-  vector\\
-  \framebox(18,40){$\mathbf{f}$}\\
-  \end{tabular} & \framebox(18,40){$\frac{\partial \mathbf{f}}{\partial {u}}$} \raisebox{22pt}{\framebox(18,18){$\frac{\partial u}{\partial {x}}$}} & \framebox(40,40){$\frac{\partial \mathbf{f}}{\partial \mathbf{u}}$} \framebox(18,40){$\frac{\partial \mathbf{u}}{\partial x}$} & & \framebox(40,40){$\frac{\partial \mathbf{f}}{\partial \mathbf{u}}$} \framebox(40,40){$\frac{\partial \mathbf{u}}{\partial \mathbf{x}}$}\\
-  
-\end{tabular}
-"></div>
 
 
 <h2 id="sec5">The gradient of neuron activation</h2>
@@ -926,7 +711,7 @@ p {
 <table style="">
 <thead>
 	<tr>
-		<th align=left>Single-variable rule</th><th align=left>Single-variable total-derivative rule</th><th align=left>Vector  rule</th>
+		<th align=left >Single-variable rule</th><th align=left >Single-variable total-derivative rule</th><th align=left >Vector  rule</th>
 	</tr>
 </thead>
 <tbody>
