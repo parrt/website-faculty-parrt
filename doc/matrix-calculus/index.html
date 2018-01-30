@@ -1,6 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113303773-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113303773-1');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 <style>
@@ -56,32 +65,31 @@ body {
         background: #FFFFFF;
         max-width: 900px;
         margin: auto;
-	-webkit-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
 }
 p {
         margin: 15px 5px 15px 5px;
 }
 @media (max-width: 415px) {
-	/* iphone 6+ 414x628 browser window, iphone 6 is 375 x 559 in browser */
-	.blkeqn {
-		padding: 0px;
-		margin-left: 0px;
-	}
-	body {
-		font-size: 14px;
-	}
+        /* iphone 6+ 414x628 browser window, iphone 6 is 375 x 559 in browser */
+        .blkeqn {
+                padding: 0px;
+                margin-left: 0px;
+        }
+        body {
+                font-size: 14px;
+        }
 }
 @media (max-width: 736px) {
-	/* iphone7+ 736 wide */
-	.blkeqn {
-		padding: 0px;
-		margin-left: 0px;
-	}
-	body {
-		font-size: 14px;
-	}
+        /* iphone7+ 736 wide */
+        .blkeqn {
+                padding: 0px;
+                margin-left: 0px;
+        }
+        body {
+                font-size: 14px;
+        }
 }
-
 </style>
 </head>
 </head>
@@ -169,7 +177,7 @@ p {
 
 <p>Well... maybe <i>need</i> isn't the right word; Jeremy's courses show how to become a world-class deep learning practitioner with only a minimal level of scalar calculus, thanks to leveraging the automatic differentiation built in to modern deep learning libraries. But if you really want to really understand what's going on under the hood of these libraries, and grok academic papers discussing the latest advances in model training techniques, you'll need to understand certain bits of the field of matrix calculus.</p>
 
-<p>For example, the activation of a single computation unit in a neural network is typically calculated using the dot product (from linear algebra) of an edge weight vector <span class=eqnvec>w</span> with an input vector <span class=eqnvec>x</span> plus a scalar bias (threshold): <img style="vertical-align: -3.4754999pt;" src="images/eqn-EEDCFA4252D0992243A283CE0EB777A6-depth003.31.svg">. Function <img style="vertical-align: -3.4125pt;" src="images/eqn-C599D931407509E0FA08F8686B205B6D-depth003.25.svg"> is called the unit's <i>affine function</i> and is followed by a <a href="https://goo.gl/7BXceK">rectified linear unit</a>, which clips negative values to zero: <img style="vertical-align: -3.4125pt;" src="images/eqn-66258AA93A4746DA10D306190271DE4B-depth003.25.svg">. Such a computational unit is sometimes referred to as an "artificial neuron" and looks like:</p>
+<p>For example, the activation of a single computation unit in a neural network is typically calculated using the dot product (from linear algebra) of an edge weight vector <span class=eqnvec>w</span> with an input vector <span class=eqnvec>x</span> plus a scalar bias (threshold): <img style="vertical-align: -3.4754999pt;" src="images/eqn-EEDCFA4252D0992243A283CE0EB777A6-depth003.31.svg">. Function <img style="vertical-align: -3.4125pt;" src="images/eqn-C599D931407509E0FA08F8686B205B6D-depth003.25.svg"> is called the unit's <i>affine function</i> and is followed by a <a href="https://goo.gl/7BXceK">rectified linear unit</a>, which clips negative values to zero: <img style="vertical-align: -3.4125pt;" src="images/eqn-66258AA93A4746DA10D306190271DE4B-depth003.25.svg">. Such a computational unit is sometimes referred to as an &ldquo;artificial neuron&rdquo; and looks like:</p>
 <center>
 <img src="images/neuron.png" alt="neuron.png" width="250">
 </center>
@@ -181,7 +189,7 @@ p {
 <p>If we're careful, we can derive the gradient by differentiating the scalar version of a common loss function (mean squared error):</p>
 <div><img class="blkeqn" src="images/blkeqn-A129949CD1EF7BE2CA8BD424D34F9930.svg" alt=""></div>
 
-<p>But this is just one neuron, and neural networks must train the weights and biases of all neurons in all layers simultaneously.   Because there are multiple inputs and (potentially) multiple network outputs, we really need general rules for the derivative of a function with respect to a vector and even rules for the derivative of a vector-valued function with respect to a vector.</p>
+<p>But this is just one neuron, and neural networks must train the weights and biases of all neurons in all layers simultaneously.  Because there are multiple inputs and (potentially) multiple network outputs, we really need general rules for the derivative of a function with respect to a vector and even rules for the derivative of a vector-valued function with respect to a vector.</p>
 
 <p>This article walks through the derivation of some important rules for computing partial derivatives with respect to vectors, particularly those useful for training neural networks. This field is known as <i>matrix calculus</i>, and the good news is, we only need a small subset of that field, which we introduce here.  While there is a lot of online material on multivariate calculus and linear algebra, they are typically taught as two separate undergraduate courses so most material treats them in isolation.  The pages that do discuss matrix calculus often are really just lists of rules with minimal explanation or are just pieces of the story. They also tend to be quite obscure to all but a narrow audience of mathematicians, thanks to their use of dense notation and minimal discussion of foundational concepts. (See the annotated list of resources at the end.)</p>
 
@@ -358,7 +366,7 @@ p {
 <h3 id="sec4.2">Derivatives of vector element-wise binary operators</h3>
 
 
-<p>Element-wise binary operations on vectors, such as vector addition <img style="vertical-align: -1.06pt;" src="images/eqn-F26AC9FE4C8C9B953164428DCE00BE9C-depth001.06.svg">, are important because we can express many common vector operations, such as the multiplication of a vector by a scalar, as element-wise binary operations.  By "element-wise binary operations" we simply mean applying an operator to the first item of each vector to get the first item of the output, then to the second items of the inputs for the second item of the output, and so forth. This is how all the basic math operators are applied by default in numpy or tensorflow, for example.  Examples that often crop up in deep learning are <img style="vertical-align: -3.4125pt;" src="images/eqn-E50C0CB908AF7566CCC6D4585634EDC2-depth003.25.svg"> and <img style="vertical-align: -0.51pt;" src="images/eqn-C65762AB635D8E08F759F1203D223C29-depth000.51.svg"> (returns a vector of ones and zeros). </p>
+<p>Element-wise binary operations on vectors, such as vector addition <img style="vertical-align: -1.06pt;" src="images/eqn-F26AC9FE4C8C9B953164428DCE00BE9C-depth001.06.svg">, are important because we can express many common vector operations, such as the multiplication of a vector by a scalar, as element-wise binary operations.  By &ldquo;element-wise binary operations&rdquo; we simply mean applying an operator to the first item of each vector to get the first item of the output, then to the second items of the inputs for the second item of the output, and so forth. This is how all the basic math operators are applied by default in numpy or tensorflow, for example.  Examples that often crop up in deep learning are <img style="vertical-align: -3.4125pt;" src="images/eqn-E50C0CB908AF7566CCC6D4585634EDC2-depth003.25.svg"> and <img style="vertical-align: -0.51pt;" src="images/eqn-C65762AB635D8E08F759F1203D223C29-depth000.51.svg"> (returns a vector of ones and zeros). </p>
 
 <p>We can generalize the element-wise binary operations with notation <img style="vertical-align: -3.4125pt;" src="images/eqn-E2E59AE84EE7A5B1C905E50FA7753A31-depth003.25.svg"> where <img style="vertical-align: -3.4125pt;" src="images/eqn-5D19E7D8CDFE53DEB40F29D8936E6C89-depth003.25.svg">. (Reminder: <img style="vertical-align: -3.4125pt;" src="images/eqn-CF513DECF6E4ACE0E25CB1C932AAA049-depth003.25.svg"> is the number of items in <span class=eqn>x</span>.) The <img style="vertical-align: -2.646pt;" src="images/eqn-1A74909B6CBAA4532A76D83B72C12DE0-depth002.52.svg"> symbol represents any element-wise operator (such as <img style="vertical-align: -1.06pt;" src="images/eqn-26B17225B626FB9238849FD60EABDF60-depth001.06.svg">) and not the <img style="vertical-align: -0.5pt;" src="images/eqn-1B3C1A40F9CB094D47E8C6F9B0DF773F-depth000.00.svg"> function composition operator.  Here's what equation <img style="vertical-align: -3.4125pt;" src="images/eqn-E2E59AE84EE7A5B1C905E50FA7753A31-depth003.25.svg"> looks like when we zoom in to examine the scalar equations:</p>
 <div><img class="blkeqn" src="images/blkeqn-208B4623A153A38A87C4E56991C6474D.svg" alt=""></div>
@@ -382,7 +390,7 @@ p {
 <p>Under this condition, the elements along the diagonal of the Jacobian are <img style="vertical-align: -6.2159996pt;" src="images/eqn-C196BF268027E86D3D2420C2A205AF28-depth005.92.svg">:</p>
 <div><img class="blkeqn" src="images/blkeqn-4CFC6C644E4A95B5760435C5094BE095.svg" alt=""></div>
 
-<p>(The large "0"s are a shorthand indicating all of the off-diagonal are 0.)</p>
+<p>(The large &ldquo;0&rdquo;s are a shorthand indicating all of the off-diagonal are 0.)</p>
 
 <p>More succinctly, we can write:</p>
 <div><img class="blkeqn" src="images/blkeqn-3D114C6873F46EE41AF91BF8B1BB37CD.svg" alt=""></div>
@@ -461,7 +469,7 @@ p {
 <h3 id="sec4.5">The Chain Rules</h3>
 
 
-<p>We can't compute partial derivatives of very complicated functions using just the basic matrix calculus rules we've seen so far.  For example, we can't take the derivative of nested expressions like <img style="vertical-align: -3.4125pt;" src="images/eqn-DCA4F9F0CE7F7CA365E8B26987ED972A-depth003.25.svg"> directly without reducing it to its scalar equivalent. We need to be able to combine our basic vector rules using what we can call the <i>vector chain rule</i>.   Unfortunately, there are a number of rules for differentiation that fall under the name "chain rule" so we have to be careful which chain rule we're talking about. Part of our goal here is to clearly define and name three different chain rules and indicate in which situation they are appropriate. To get warmed up, we'll start with what we'll call the <i>single-variable chain rule</i>, where we want the derivative of a scalar function with respect to a scalar. Then we'll move on to an important concept called the <i>total derivative</i> and use it to define what we'll pedantically call the <i>single-variable total-derivative chain rule</i>. Then, we'll be ready for the vector chain rule in its full glory as needed for neural networks.</p>
+<p>We can't compute partial derivatives of very complicated functions using just the basic matrix calculus rules we've seen so far.  For example, we can't take the derivative of nested expressions like <img style="vertical-align: -3.4125pt;" src="images/eqn-DCA4F9F0CE7F7CA365E8B26987ED972A-depth003.25.svg"> directly without reducing it to its scalar equivalent. We need to be able to combine our basic vector rules using what we can call the <i>vector chain rule</i>.   Unfortunately, there are a number of rules for differentiation that fall under the name &ldquo;chain rule&rdquo; so we have to be careful which chain rule we're talking about. Part of our goal here is to clearly define and name three different chain rules and indicate in which situation they are appropriate. To get warmed up, we'll start with what we'll call the <i>single-variable chain rule</i>, where we want the derivative of a scalar function with respect to a scalar. Then we'll move on to an important concept called the <i>total derivative</i> and use it to define what we'll pedantically call the <i>single-variable total-derivative chain rule</i>. Then, we'll be ready for the vector chain rule in its full glory as needed for neural networks.</p>
 
 <p>The chain rule is conceptually a divide and conquer strategy (like Quicksort) that breaks complicated expressions into subexpressions whose derivatives are easier to compute.  Its power derives from the fact that we can process each simple subexpression in isolation yet still combine the  intermediate results to get the correct overall result.</p>
 
@@ -533,7 +541,7 @@ p {
 <h2 id="sec6">The gradient of the neural network loss function</h2>
 
 
-<p>Training a neuron requires that we take the derivative of our loss  or "cost" function with respect to the parameters of our model, <span class=eqnvec>w</span> and <span class=eqn>b</span>. Because we train with multiple vector inputs (e.g., multiple images) and scalar targets (e.g., one classification per image), we need some more notation. Let </p>
+<p>Training a neuron requires that we take the derivative of our loss  or &ldquo;cost&rdquo; function with respect to the parameters of our model, <span class=eqnvec>w</span> and <span class=eqn>b</span>. Because we train with multiple vector inputs (e.g., multiple images) and scalar targets (e.g., one classification per image), we need some more notation. Let </p>
 <div><img class="blkeqn" src="images/blkeqn-D9D9E4DA80EA78BCCCDDC0BE89A198CD.svg" alt=""></div>
 
 <p>where <img style="vertical-align: -3.4125pt;" src="images/eqn-BEDD04B41054D234623B0BB3759ABF73-depth003.25.svg">, and then let </p>
@@ -750,7 +758,7 @@ p {
 
 <p>Notation <img style="vertical-align: -3.4125pt;" src="images/eqn-50BBD36E1FD2333108437A2CA378BE62-depth003.25.svg"> refers to a function called <span class=eqn>f</span> with an argument of <span class=eqn>x</span>, which is just `def f(x)` in Python.</p>
 
-<p><span class=eqn>I</span> represents the square "identity matrix" of appropriate dimensions that is zero everywhere but the diagonal, which contains all ones.</p>
+<p><span class=eqn>I</span> represents the square &ldquo;identity matrix&rdquo; of appropriate dimensions that is zero everywhere but the diagonal, which contains all ones.</p>
 
 <p><img style="vertical-align: -3.4125pt;" src="images/eqn-4935E4C6B875FD6C7C181871B566AB1A-depth003.25.svg">  constructs a matrix whose diagonal elements are taken from vector <span class=eqnvec>x</span>: <img style="vertical-align: -3.4125pt;" src="images/eqn-358C0E8F99CB66017CCD32DBC6C23C50-depth003.25.svg">.</p>
 
@@ -772,7 +780,7 @@ p {
 <h2 id="sec10">Resources</h2>
 
 
-<p>When looking for resources on the web, search for "matrix calculus" not "vector calculus."  Here are some comments on the top links that come up from a <a href="https://www.google.com/search?q=matrix+calculus&oq=matrix+calculus">Google search</a>:</p>
+<p>When looking for resources on the web, search for &ldquo;matrix calculus&rdquo; not &ldquo;vector calculus.&rdquo;  Here are some comments on the top links that come up from a <a href="https://www.google.com/search?q=matrix+calculus&oq=matrix+calculus">Google search</a>:</p>
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Matrix_calculus">https://en.wikipedia.org/wiki/Matrix_calculus</a>
 
@@ -784,7 +792,7 @@ p {
 </li>
 <li><a href="https://www.colorado.edu/engineering/CAS/courses.d/IFEM.d/IFEM.AppC.d/IFEM.AppC.pdf">https://www.colorado.edu/engineering/CAS/courses.d/IFEM.d/IFEM.AppC.d/IFEM.AppC.pdf</a>
 
-<p>This is part of the course notes for "Introduction to Finite Element Methods" I believe by <a href="https://www.colorado.edu/engineering/CAS/courses.d/IFEM.d">Carlos A. Felippa</a>.  His Jacobians are transposed from our notation because he uses denominator layout.</p>
+<p>This is part of the course notes for &ldquo;Introduction to Finite Element Methods&rdquo; I believe by <a href="https://www.colorado.edu/engineering/CAS/courses.d/IFEM.d">Carlos A. Felippa</a>.  His Jacobians are transposed from our notation because he uses denominator layout.</p>
 </li>
 <li><a href="http://www.ee.ic.ac.uk/hp/staff/dmb/matrix/calculus.html">http://www.ee.ic.ac.uk/hp/staff/dmb/matrix/calculus.html</a>
 
