@@ -864,7 +864,7 @@ p {
 <p>From there, notice that this computation is a weighted average across all <span class=eqnvec>x</span><sub class=eqn>i</sub> in <span class=eqn>X</span>. The weights are the error terms, the difference between the target output and the actual neuron output for each <span class=eqnvec>x</span><sub class=eqn>i</sub> input. The resulting gradient will, on average, point in the direction of higher cost or loss because large <span class=eqn>e<sub>i</sub></span> emphasize their associated <span class=eqnvec>x</span><sub class=eqn>i</sub>. Imagine we only had one input vector, <img style="vertical-align: -3.4125pt;" src="images/eqn-75147DC2E59AB7AF04E48C0E3C2D71EA-depth003.25.svg">, then the gradient is just <img style="vertical-align: -3.6225pt;" src="images/eqn-26DDD7C22F3D8F5B07FC7EE421EEE6ED-depth003.45.svg">.  If the error is 0, then the gradient is zero and we have arrived at the minimum loss. If <img style="vertical-align: -2.0475pt;" src="images/eqn-3104BCC503B3B8C16FFA2940B56AAF1C-depth001.95.svg"> is some small positive difference, the gradient is a small step in the direction of <img style="vertical-align: -2.0475pt;" src="images/eqn-262A3BD0318D5034272A8F904D6FAD24-depth001.95.svg">. If <img style="vertical-align: -2.0475pt;" src="images/eqn-3104BCC503B3B8C16FFA2940B56AAF1C-depth001.95.svg"> is large, the gradient is a large step in that direction. If <img style="vertical-align: -2.0475pt;" src="images/eqn-3104BCC503B3B8C16FFA2940B56AAF1C-depth001.95.svg"> is negative, the gradient is reversed, meaning the highest cost is in the negative direction.</p>
 
 <p>Of course, we want to reduce, not increase, the loss, which is why the <a href="https://en.wikipedia.org/wiki/Gradient_descent">gradient descent</a> recurrence relation takes the negative of the gradient to update the current position (for scalar learning rate  <img style="vertical-align: -2.7825pt;" src="images/eqn-FFE9F913124F345732E9F00FA258552E-depth002.65.svg">):</p>
-<div><img class="blkeqn" src="images/blkeqn-30F3667BFB088A174DD6CC1F0908780A.svg" alt=""></div>
+<div><img class="blkeqn" src="images/blkeqn-C50B63069D6F8CA47A43A8116F4AD21B.svg" alt=""></div>
 
 <p>Because the gradient indicates the direction of higher cost, we want to update <span class=eqnvec>x</span> in the opposite direction.</p>
 
@@ -1044,7 +1044,7 @@ p {
 <h2 id="sec10">Resources</h2>
 
 
-<p><a href="http://www.wolframalpha.com/input/?i=D%5B%7Bx%5E2,+x%5E3%7D.%7B%7B1,2%7D,%7B3,4%7D%7D.%7Bx%5E2,+x%5E3%7D,+x%5D">Wolfram Alpha</a> can do symbolic matrix calculus and there is also a cool dedicated <a href="http://www.matrixcalculus.org/">matrix calculus differentiator</a>.</p>
+<p><a href="http://www.wolframalpha.com/input/?i=D%5B%7Bx%5E2,+x%5E3%7D.%7B%7B1,2%7D,%7B3,4%7D%7D.%7Bx%5E2,+x%5E3%7D,+x%5D">Wolfram Alpha</a> can do symbolic matrix algebra and there is also a cool dedicated <a href="http://www.matrixcalculus.org/">matrix calculus differentiator</a>.</p>
 
 <p>When looking for resources on the web, search for &ldquo;matrix calculus&rdquo; not &ldquo;vector calculus.&rdquo;  Here are some comments on the top links that come up from a <a href="https://www.google.com/search?q=matrix+calculus&oq=matrix+calculus">Google search</a>:</p>
 <ul>
