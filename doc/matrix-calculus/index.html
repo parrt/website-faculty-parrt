@@ -90,6 +90,9 @@ p {
                 font-size: 14px;
         }
 }
+h1 {
+        line-height: 1.2em;
+}
 </style>
 </head>
 </head>
@@ -109,7 +112,10 @@ p {
 <p><a href="http://parrt.cs.usfca.edu/doc/matrix-calculus.pdf" onClick="gtag('event', 'download', {
   'video_title': 'PDF version',
   'non_interaction': true
-});">Printable version</a> (This HTML was generated from markup using <a href="https://github.com/parrt/bookish">bookish</a>)</p>
+});">Printable version</a> (This HTML was generated from markup using <a href="https://github.com/parrt/bookish" onClick="gtag('event', 'download', {
+  'video_title': 'bookish',
+  'non_interaction': true
+});">bookish</a>)</p>
 </p>
 
 
@@ -181,8 +187,9 @@ p {
 <p>Well... maybe <i>need</i> isn't the right word; Jeremy's courses show how to become a world-class deep learning practitioner with only a minimal level of scalar calculus, thanks to leveraging the automatic differentiation built in to modern deep learning libraries. But if you really want to really understand what's going on under the hood of these libraries, and grok academic papers discussing the latest advances in model training techniques, you'll need to understand certain bits of the field of matrix calculus.</p>
 
 <p>For example, the activation of a single computation unit in a neural network is typically calculated using the dot product (from linear algebra) of an edge weight vector <span class=eqnvec>w</span> with an input vector <span class=eqnvec>x</span> plus a scalar bias (threshold): <img style="vertical-align: -3.4754999pt;" src="images/eqn-EEDCFA4252D0992243A283CE0EB777A6-depth003.31.svg">. Function <img style="vertical-align: -3.4125pt;" src="images/eqn-C599D931407509E0FA08F8686B205B6D-depth003.25.svg"> is called the unit's <i>affine function</i> and is followed by a <a href="https://goo.gl/7BXceK">rectified linear unit</a>, which clips negative values to zero: <img style="vertical-align: -3.4125pt;" src="images/eqn-66258AA93A4746DA10D306190271DE4B-depth003.25.svg">. Such a computational unit is sometimes referred to as an &ldquo;artificial neuron&rdquo; and looks like:</p>
+
 <center>
-<img src="images/neuron.png" alt="neuron.png" width="250">
+<p><img src="images/neuron.png" alt="neuron.png" width="250"></p>
 </center>
 
 <p>Neural networks consist of many of these units, organized into multiple collections of neurons called <i>layers</i>. The activation of one layer's units become the input to the next layer's units. The activation of the unit or units in the final layer is called the network output.</p>
@@ -399,13 +406,13 @@ p {
 <p>and</p>
 <div><img class="blkeqn" src="images/blkeqn-78E1B2628221D9FD588A011D54670619.svg" alt=""></div>
 
-<p>where <img style="vertical-align: -3.4125pt;" src="images/eqn-4935E4C6B875FD6C7C181871B566AB1A-depth003.25.svg"> constructs a matrix whose diagonal elements are taken from vector <span class=eqnvec>x</span>: <img style="vertical-align: -3.4125pt;" src="images/eqn-358C0E8F99CB66017CCD32DBC6C23C50-depth003.25.svg">. <span class=eqn>I</span> represents the square identity matrix of appropriate dimensions that is zero everywhere but the diagonal, which contains all ones.  The <span class=eqn>T</span> exponent of <img style="vertical-align: -0.5pt;" src="images/eqn-FAAEE783424BC0E27E9AA2F56A7B50B8-depth000.00.svg"> represents the transpose of the indicated vector. In this case, it flips a vertical vector to a horizontal vector.</p>
+<p>where <img style="vertical-align: -3.4125pt;" src="images/eqn-4935E4C6B875FD6C7C181871B566AB1A-depth003.25.svg"> constructs a matrix whose diagonal elements are taken from vector <span class=eqnvec>x</span>. </p>
 
 <p>Because we do lots of simple vector arithmetic, the general function <img style="vertical-align: -3.4125pt;" src="images/eqn-5B39FE68B4FDD0AF04290BA579A993CB-depth003.25.svg"> in the binary element-wise operation is often just the vector <span class=eqnvec>w</span>.  Any time the general function is a vector, we know that <img style="vertical-align: -3.4125pt;" src="images/eqn-BD5A63074F44F11CB2ED06325816582A-depth003.25.svg"> reduces to <img style="vertical-align: -3.4125pt;" src="images/eqn-F5BDA09DDE6E00806B01094F5BED3026-depth003.25.svg">. For example, vector addition <img style="vertical-align: -1.06pt;" src="images/eqn-DF3F5FDED9142A243031D03CF82121AE-depth001.06.svg"> fits our element-wise diagonal condition because <img style="vertical-align: -3.4125pt;" src="images/eqn-1ED79D2E2BBE9EE796433D13773157A7-depth003.25.svg"> has scalar equations <img style="vertical-align: -3.4125pt;" src="images/eqn-F7C644AAA7A70D588A0E003C7C9E439E-depth003.25.svg"> that reduce to just <img style="vertical-align: -3.4125pt;" src="images/eqn-85550E18F87E4AF75645A38273B97A80-depth003.25.svg"> with partial derivatives:</p>
 <div><img class="blkeqn" src="images/blkeqn-A5DC35FE0CEC748B35BB5991933C4698.svg" alt=""></div>
 <div><img class="blkeqn" src="images/blkeqn-C2B0BF832F19994D832F90C18B1F04AF.svg" alt=""></div>
 
-<p>That gives us <img style="vertical-align: -4.9035pt;" src="images/eqn-2935E504F134B53B2C03072175BCCD1F-depth004.67.svg">, the identity matrix, because every element along the diagonal is 1.</p>
+<p>That gives us <img style="vertical-align: -4.9035pt;" src="images/eqn-2935E504F134B53B2C03072175BCCD1F-depth004.67.svg">, the identity matrix, because every element along the diagonal is 1. <span class=eqn>I</span> represents the square identity matrix of appropriate dimensions that is zero everywhere but the diagonal, which contains all ones.  </p>
 
 <p>Given the simplicity of this special case, <img style="vertical-align: -3.4125pt;" src="images/eqn-BD5A63074F44F11CB2ED06325816582A-depth003.25.svg"> reducing to <img style="vertical-align: -3.4125pt;" src="images/eqn-DB590A5BF8B0ACC05B1FEEDC07929CD7-depth003.25.svg">, you should be able to derive the Jacobians for the common element-wise binary operations on vectors:</p>
 <div><img class="blkeqn" src="images/blkeqn-0C9CE28C888576E0D4873BDD69BC74EA.svg" alt=""></div>
@@ -461,13 +468,13 @@ p {
 <p>Because <img style="vertical-align: -7.5705pt;" src="images/eqn-9B32CEB09BA5F0B84935A24BF81D3C9C-depth007.21.svg"> for <img style="vertical-align: -2.856pt;" src="images/eqn-B064F8555EC660F2F8BDC927D9636A06-depth002.72.svg">, we can simplify to:</p>
 <div><img class="blkeqn" src="images/blkeqn-9D07CB9DFE389978D329A8CFE7568825.svg" alt=""></div>
 
-<p>Notice that the result is a horizontal vector full of 1s, not a vertical vector, and so the gradient is <img style="vertical-align: -0.5pt;" src="images/eqn-DFB70C45B6CCB149DFDA0E3690715F92-depth000.00.svg">.  It's very important to keep the shape of all of your vectors and matrices in order otherwise it's impossible to compute the derivatives of complex functions.</p>
+<p>Notice that the result is a horizontal vector full of 1s, not a vertical vector, and so the gradient is <img style="vertical-align: -0.5pt;" src="images/eqn-DFB70C45B6CCB149DFDA0E3690715F92-depth000.00.svg">.  (The <span class=eqn>T</span> exponent of <img style="vertical-align: -0.5pt;" src="images/eqn-DFB70C45B6CCB149DFDA0E3690715F92-depth000.00.svg"> represents the transpose of the indicated vector. In this case, it flips a vertical vector to a horizontal vector.) It's very important to keep the shape of all of your vectors and matrices in order otherwise it's impossible to compute the derivatives of complex functions.</p>
 
 <p>As another example, let's sum the result of multiplying a vector by a constant scalar.  If <img style="vertical-align: -3.4125pt;" src="images/eqn-729968724651D87C8269B6FFEAD6EA90-depth003.25.svg"> then <img style="vertical-align: -3.4125pt;" src="images/eqn-A5D03DE59DCDBA948F463FAABD04791D-depth003.25.svg">. The gradient is:</p>
 <div><img class="blkeqn" src="images/blkeqn-4C28E3734FC6110AF58C567604ED3462.svg" alt=""></div>
 
 <p>The derivative with respect to scalar variable <span class=eqn>z</span> is <img style="vertical-align: -1.08pt;" src="images/eqn-5ED2D4C114D036610B8E20271C5026EF-depth001.08.svg">:</p>
-<div><img class="blkeqn" src="images/blkeqn-C196ACAC45CCCF31A1541B15402C94E7.svg" alt=""></div>
+<div><img class="blkeqn" src="images/blkeqn-709809A15FF63948512A3F83DF9F04EA.svg" alt=""></div>
 
 
 <h3 id="sec4.5">The Chain Rules</h3>
@@ -520,12 +527,14 @@ p {
 
 <p>Notice how easy it is to compute the derivatives of the intermediate variables in isolation! The chain rule says it's legal to do that and tells us how to combine the intermediate results to get <img style="vertical-align: -3.4125pt;" src="images/eqn-E4D3AF86AC3E4315148DA23A886A72EA-depth003.25.svg">.</p>
 
-<p>You can think of the combining step of the chain rule in terms of units canceling. If we let <span class=eqn>y</span> be gallons of gas, <span class=eqn>x</span> be the gallons in a gas tank, and <span class=eqn>u</span> as miles we can interpret <img style="vertical-align: -4.8089995pt;" src="images/eqn-70047C98E4163674E78BB42D0CF4AEA8-depth004.58.svg"> as <img style="vertical-align: -6.657pt;" src="images/eqn-F98E0EBA888E860C7E51565C7225EBFA-depth006.34.svg">. The <span class=eqn>gallon</span> denominator and numerator cancel.</p>
+<p>You can think of the combining step of the chain rule in terms of units canceling. If we let <span class=eqn>y</span> be miles, <span class=eqn>x</span> be the gallons in a gas tank, and <span class=eqn>u</span> as gallons we can interpret <img style="vertical-align: -4.8089995pt;" src="images/eqn-70047C98E4163674E78BB42D0CF4AEA8-depth004.58.svg"> as <img style="vertical-align: -6.657pt;" src="images/eqn-F98E0EBA888E860C7E51565C7225EBFA-depth006.34.svg">. The <span class=eqn>gallon</span> denominator and numerator cancel.</p>
 
 <p>Another way to to think about the single-variable chain rule is to visualize the overall expression as a dataflow diagram or chain of operations (or <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">abstract syntax tree</a> for compiler people):</p>
+
 <center>
-<img src="images/sin-square.png" alt="sin-square.png" width="130">
+<p><img src="images/sin-square.png" alt="sin-square.png" width="130"></p>
 </center>
+
 
 <p>Changes to function parameter <span class=eqn>x</span> bubble up through a squaring operation then through a <span class=eqn>sin</span> operation to change result <span class=eqn>y</span>. You can think of <img style="vertical-align: -4.8089995pt;" src="images/eqn-B13DB657CBF4B8318DBF2799E687D1A1-depth004.58.svg"> as &ldquo;getting changes from <span class=eqn>x</span> to <span class=eqn>u</span>&rdquo; and <img style="vertical-align: -4.8089995pt;" src="images/eqn-6E939E305B65D08F88FF95E7E028796B-depth004.58.svg"> as &ldquo;getting changes from <span class=eqn>u</span> to <span class=eqn>y</span>.&rdquo; Getting from <span class=eqn>x</span> to <span class=eqn>y</span> requires an intermediate hop. The chain rule is, by convention, usually written from the output variable down to the parameter(s), <img style="vertical-align: -4.8089995pt;" src="images/eqn-70047C98E4163674E78BB42D0CF4AEA8-depth004.58.svg">. But, the <span class=eqn>x</span>-to-<span class=eqn>y</span> perspective would be more clear if we reversed the flow and used the equivalent <img style="vertical-align: -4.8089995pt;" src="images/eqn-256F5475DE15D99D8D55FE6F3A15CEA4-depth004.58.svg">.</p>
 
@@ -568,9 +577,11 @@ p {
 </ol>
 
 <p>Here is a visualization of the data flow through the chain of operations from <span class=eqn>x</span> to <span class=eqn>y</span>:</p>
+
 <center>
-<img src="images/chain-tree.png" alt="chain-tree.png" width="150">
+<p><img src="images/chain-tree.png" alt="chain-tree.png" width="150"></p>
 </center>
+
 
 <p>At this point, we can handle derivatives of nested expressions of a single variable, <span class=eqn>x</span>, using the chain rule but only if <span class=eqn>x</span> can affect <span class=eqn>y</span> through a single data flow path. To handle more complicated expressions, we need to extend our technique, which we'll do next.</p>
 
@@ -588,9 +599,11 @@ p {
 <div><img class="blkeqn" src="images/blkeqn-7A7B19296641D8B6B96136527F381589.svg" alt=""></div>
 
 <p>Ooops! The partial <img style="vertical-align: -4.9035pt;" src="images/eqn-9A001AB7445AD6C36176920C0E5D253F-depth004.67.svg"> is wrong because it violates a key assumption for partial derivatives. When taking the partial derivative with respect to <span class=eqn>x</span>, the other variables must not vary as <span class=eqn>x</span> varies. Otherwise, we could not act as if the other variables were constants. Clearly, though, <img style="vertical-align: -3.4125pt;" src="images/eqn-0F0BF7F8711E6437357749F43EF529D8-depth003.25.svg"> is a function of <span class=eqn>x</span> and therefore varies with <span class=eqn>x</span>. <img style="vertical-align: -4.9035pt;" src="images/eqn-78D6E87F2E36D9F4C482E9236F997C4C-depth004.67.svg"> because <img style="vertical-align: -4.9035pt;" src="images/eqn-C9E3A40CD8239D58296F30B000154F1A-depth004.67.svg">. A quick look at the data flow diagram for <img style="vertical-align: -3.4125pt;" src="images/eqn-AC2672C7A79B0E068FB3AC3D7FBF94C9-depth003.25.svg"> shows multiple paths from <span class=eqn>x</span> to <span class=eqn>y</span>, thus, making it clear we need to consider direct and indirect (through <img style="vertical-align: -3.4125pt;" src="images/eqn-D8F3471EF0522DC14012F0DC5D01D570-depth003.25.svg">) dependencies on <span class=eqn>x</span>:</p>
+
 <center>
-<img src="images/plus-square.png" alt="plus-square.png" width="150">
+<p><img src="images/plus-square.png" alt="plus-square.png" width="150"></p>
 </center>
+
 
 <p>A change in <span class=eqn>x</span> affects <span class=eqn>y</span> both as an operand of the addition and as the operand of the square operator. Here's an equation that describes how tweaks to <span class=eqn>x</span> affect the output:</p>
 <div><img class="blkeqn" src="images/blkeqn-69B14AB41D9A7514E8C105FDDF9649C5.svg" alt=""></div>
@@ -636,7 +649,7 @@ p {
 <div><img class="blkeqn" src="images/blkeqn-D8F0438A2B5867000190B7AB280DDD9A.svg" alt=""></div>
 
 <p>We can achieve that by simply introducing a new temporary variable as an alias for <span class=eqn>x</span>: <img style="vertical-align: -2.8244998pt;" src="images/eqn-80A59ADB26E30571A3056E2EB3E8DDCB-depth002.69.svg">. Then, the formula reduces to our final form:</p>
-<div><img class="blkeqn" src="images/blkeqn-E67E8C776D0E1C3174B27A33B9850506.svg" alt=""></div>
+<div><img class="blkeqn" src="images/blkeqn-DE79CDE41F7B81D0C8E5D49F3D9766BB.svg" alt=""></div>
 
 <p>This chain rule that takes into consideration the total derivative degenerates to the single-variable chain rule when all intermediate variables are functions of a single variable.   Consequently, you can remember this more general formula to cover both cases.  As a bit of dramatic foreshadowing, notice that the summation sure looks like a vector dot product, <img style="vertical-align: -4.9035pt;" src="images/eqn-3F95AED50A8E6A5C514952D767B771CE-depth004.67.svg">, or  a vector multiply <img style="vertical-align: -4.9035pt;" src="images/eqn-51D7B0B0455FB229AB4920E9CA4AB032-depth004.67.svg">. </p>
 
