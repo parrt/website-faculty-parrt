@@ -64,7 +64,7 @@ p {
         margin: 15px 5px 15px 0px;
 }
 .caption {
-	font-size: 20%;
+	font-size: 80%;
 }
 @media (max-width: 415px) {
         /* iphone 6+ 414x628 browser window, iphone 6 is 375 x 559 in browser */
@@ -122,19 +122,19 @@ table.dataframe {
 }       
 table.dataframe td {
 		font-family: "Helvetica", sans-serif;
-        font-size: 85%;
+        font-size: 80%;
         text-align: right;
         text-size-adjust: 100%;
         vertical-align: top;
-        padding: 2px 10px;
+        padding: 2px 5px;
         line-height: 1.1em;
 }
 table.dataframe th {
 		font-family: "Helvetica", sans-serif;
-        font-size: 85%;
+        font-size: 80%;
         text-align: right;
         text-size-adjust: 100%;
         vertical-align: bottom;
         border-bottom: 1px solid;
-        padding: 0px 10px;
+        padding: 0px 5px;
 }

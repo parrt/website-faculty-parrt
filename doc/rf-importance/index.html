@@ -29,17 +29,17 @@ To prepare educational material on regression and classification with random for
 <div class="scrollbar_wrapper">
 <table class="dataframe">
 <thead>
-	<tr><th>bathrooms</th><th>bedrooms</th><th>price</th><th>longitude</th><th>latitude</th><th>interest_level</th></tr>
+	<tr><th>bathrooms</th><th>bdrms</th><th>price</th><th>longitude</th><th>latitude</th><th>interest_level</th></tr>
 </thead>
 <tbody>
 	<tr>
-	<td>1.5000</td><td>3</td><td>3000</td><td>-73.9425</td><td>40.7145</td><td>2</td>
+	<td>1.5000</td><td>3</td><td>3000</td><td>-73.942</td><td>40.714</td><td>2</td>
 	</tr>
 	<tr>
-	<td>1.0000</td><td>2</td><td>5465</td><td>-73.9667</td><td>40.7947</td><td>1</td>
+	<td>1.0000</td><td>2</td><td>5465</td><td>-73.966</td><td>40.794</td><td>1</td>
 	</tr>
 	<tr>
-	<td>1.0000</td><td>1</td><td>2850</td><td>-74.0018</td><td>40.7388</td><td>3</td>
+	<td>1.0000</td><td>1</td><td>2850</td><td>-74.001</td><td>40.738</td><td>3</td>
 	</tr>
 </tbody>
 </table>
@@ -188,7 +188,9 @@ The implementation of drop-column is a straightforward loop like the permutation
         o = rf_.oob_score_
         imp.append(baseline - o)
     imp = np.array(imp)
-    I = pd.DataFrame(data={'Feature':X_train.columns, 'Importance':imp})
+    I = pd.DataFrame(
+            data={'Feature':X_train.columns,
+                  'Importance':imp})
     I = I.set_index('Feature')
     I = I.sort_values('Importance', ascending=True)
     return I
@@ -219,8 +221,8 @@ That settles it for Python, so let's take a look at R, another popular language 
 <p>
 Unfortunately, R's default importance strategy is mean-decrease-in-impurity, just like scikit, and so results are again unreliable. For example, here's a typical code snippet to create a random forest and get the feature importances that traps the unwary:
 
-<div class="codeblk">rf <- randomForest(price~., data = df[, 1:5], mtry=4, ntree = 40)
-imp <- importance(rf) # default is mean-decrease-in-impurity
+<div class="codeblk"><span style="color: #a50026">rf <- randomForest(price~., data = df[, 1:5], mtry=4, ntree = 40)
+imp <- importance(rf) # default is mean-decrease-in-impurity</span>
 </div>
 
 <p>
