@@ -16,8 +16,35 @@
 
 <h3>TL;DR</h3>
 
+<p>
 The scikit-learn Random Forest feature importance and R's default Random Forest feature importance strategies are unreliable. To get reliable results in Python, use permutation importance, provided here and in our <a href="https://github.com/parrt/random-forest-importances/tree/master/src">rfpimp</a> package (via <font size=-1><tt>pip</tt></font>). For R, use <font size=-1><tt>importance=T</tt></font> in the random forest constructor then <font size=-1><tt>type=1</tt></font> in R's <font size=-1><tt>importance()</tt></font> function.
 
+<p>
+<div id="toc">
+<p class="toc_title">Contents</p>
+<ul>
+	<li><a href="#intro">Model Feature Importances</a></li>
+	<li><a href="#">Trouble in paradise</a></li>
+	<li><a href="#">Default feature importance mechanism</a></li>
+	<li><a href="#">Permutation importance</a></li>
+	<li><a href="#">Drop-column importance</a></li>
+	<li><a href="#">Comparing R to scikit-learn importances</a></li>
+	<ul>
+		<li><a href="#">R mean-decrease-in-impurity importance</a></li>
+		<li><a href="#">R permutation importance</a></li>
+		<li><a href="#">R drop-column importance</a></li>
+	</ul>
+	<li><a href="#">Summary</a></li>
+	<li><a href="#">Resources and sample code</a></li>
+	<ul>
+		<li><a href="#">Python</a></li>
+		<li><a href="#">R</a></li>
+		<li><a href="#">Sample Kaggle apartment data</a></li>	
+	</ul>
+</ul>
+</div>
+
+<a name=intro></a><h3>Model Feature Importances</h3>
 
 <h3>Trouble in paradise</h3>
 
@@ -249,7 +276,7 @@ Make sure that you don't use the <font size=-1><tt>MeanDecreaseGini</tt></font> 
 <p>
 It's worth comparing R and scikit in detail.  It not only gives us an opportunity to verify the results of our homebrewed permutation implementation, but we can also demonstrate that R's type=2 importances have the same issues as scikit's only importance implementation.
 
-<h4>R mean-decrease-in-impurity importance comparison</h4>
+<h4>R mean-decrease-in-impurity importance</h4>
 
 <p>
 R's mean-decrease-in-impurity importance (type=2) gives the same implausible results as we saw with scikit.  To demonstrate this, we trained an RF regressor and classifier in R using the same data set and generated the importance graphs in <b>Figure 4(a)</b> and <b>Figure 4(b)</b>. The graphs mirror the implausible scikit graphs.
@@ -267,7 +294,7 @@ R's mean-decrease-in-impurity importance (type=2) gives the same implausible res
 <b>Figure 4(b)</b>. R's type=2 importances for Random Forest <b>classifier</b> predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. Highly suspicious that random column is much more important than the number of bedrooms.
 </table>
 		
-<h4>R permutation importance comparison</h4>
+<h4>R permutation importance</h4>
 
 <p>
 As a means of checking our permutation implementation in Python, we plotted and compared our feature importances side-by-side with those of R, as shown in <b>Figure 5</b> for regression and <b>Figure 6</b> for classification. The importance of values themselves are different, but the feature order and relative levels are very similar, which is what we care about.
@@ -300,7 +327,7 @@ As a means of checking our permutation implementation in Python, we plotted and 
 <b>Figure 6(b)</b>. Python permutation importance for RF <b>classifier</b>
 </table>
 
-<h4>R drop-column importance comparison</h4>
+<h4>R drop-column importance</h4>
 
 <p>
 For completeness, we implemented drop-column importance in R and compared to our Python implementation, as shown in <b>Figure 8</b> for regression and <b>Figure 9</b> for classification.
@@ -338,7 +365,7 @@ For completeness, we implemented drop-column importance in R and compared to our
 <p>
 The takeaway from all of this is that the most popular RF implementation in Python (scikit) and R's RF default importance strategy do not give reliable feature importances when &ldquo;<i>... potential predictor variables vary in their scale of measurement or their number of categories</i>.&rdquo; (Strobl <i>et al</i>). Rather than figuring out whether your data set conforms to one that gets accurate results, simply use permutation importance. You can either use our Python implementation (<a href="https://github.com/parrt/random-forest-importances/tree/master/src">rfpimp</a> via <font size=-1><tt>pip</tt></font>)  or, if using R, make sure to use <font size=-1><tt>importance=T</tt></font> in the random forest constructor then <font size=-1><tt>type=1</tt></font> in R's <font size=-1><tt>importance()</tt></font> function.
 
-<h3>Appendix A: Resources and sample code</h3>
+<h3>Resources and sample code</h3>
 
 <p>Breiman and Cutler are the inventors of RFs, so it's worth checking out their discussion of <a href="https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm#varimp">variable importance</a>. They describe the main decrease in impurity importance and also the permutation importance.
 

@@ -1,14 +1,16 @@
+/*
 .fig-container {
   display: flex;
   overflow-x: scroll;	
   flex: auto;  
   width: 100%;
   flex-wrap: wrap;
-/*	  flex-flow: row wrap;*/
+  flex-flow: row wrap;
 }
 .fig-container > div {
   flex: 1;
 }
+*/
 #toc {
     background: #f9f9f9 none repeat scroll 0 0;
     border: 1px solid #aaa;
@@ -70,20 +72,20 @@ p {
         /* iphone 6+ 414x628 browser window, iphone 6 is 375 x 559 in browser */
         .blkeqn {
                 padding: 0px;
-                margin-left: 0px;
+                margin-left: 2%;
         }
         body {
-                font-size: 14px;
+                font-size: 100%;
         }
 }
 @media (max-width: 736px) {
         /* iphone7+ 736 wide */
         .blkeqn {
                 padding: 0px;
-                margin-left: 0px;
+                margin-left: 2%;
         }
         body {
-                font-size: 14px;
+                font-size: 100%;
         }
 }
 h1 {
