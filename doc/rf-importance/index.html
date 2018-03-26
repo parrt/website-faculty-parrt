@@ -29,17 +29,17 @@ To prepare educational material on regression and classification with random for
 <div class="scrollbar_wrapper">
 <table class="dataframe">
 <thead>
-	<tr><th>bathrooms</th><th>bdrms</th><th>price</th><th>longitude</th><th>latitude</th><th>interest_level</th></tr>
+	<tr><th>bath<br>rooms</th><th>bed<br>rooms</th><th>price</th><th>longi-<br>tude</th><th>lati-<br>tude</th><th>interest_<br>level</th></tr>
 </thead>
 <tbody>
 	<tr>
-	<td>1.5000</td><td>3</td><td>3000</td><td>-73.942</td><td>40.714</td><td>2</td>
+	<td>1.5</td><td>3</td><td>3000</td><td>-73.942</td><td>40.714</td><td>2</td>
 	</tr>
 	<tr>
-	<td>1.0000</td><td>2</td><td>5465</td><td>-73.966</td><td>40.794</td><td>1</td>
+	<td>1.0</td><td>2</td><td>5465</td><td>-73.966</td><td>40.794</td><td>1</td>
 	</tr>
 	<tr>
-	<td>1.0000</td><td>1</td><td>2850</td><td>-74.001</td><td>40.738</td><td>3</td>
+	<td>1.0</td><td>1</td><td>2850</td><td>-74.001</td><td>40.738</td><td>3</td>
 	</tr>
 </tbody>
 </table>
@@ -88,7 +88,8 @@ X_train, y_train = dfc.drop('interest_level',axis=1), dfc['interest_level']
 X_train['random'] = np.random.random(size=len(X_train))
 rf = RandomForestClassifier(
          n_estimators=100,
-         min_samples_leaf=5, # better generality with 5
+         # better generality with 5
+         min_samples_leaf=5, 
          n_jobs=-1,
          oob_score=True)
 rf.fit(X_train, y_train)
@@ -148,17 +149,18 @@ imp = permutation_importances(rf, X_train, y_train,
 <p>
 To test permutation importances, we plotted the regressor and classifier importances, as shown in <b>Figure 2(a)</b> and <b>Figure 2(b)</b>, using the same models from above. Both models included a random column, which correctly show up as the least important feature. The regressor in <b>Figure 1(a)</b> also had the random column last, but it showed the number of bathrooms as the strongest predictor of apartment rent price. The permutation importance in <b>Figure 2(a)</b> places bathrooms more reasonably as the least important feature, other than the random column.
 
-<div class="fig-container">
-	<div>
-<img src="images/regr_permute_random.svg" width="75%"><br>
+<table class=figure>
+<tr>
+<td>
+	<img src="images/regr_permute_random.svg" width="75%">
+<td>
+	<img src="images/cls_permute_random.svg" width="70%">
+<tr>
+<td>
 <span class="caption"><b>Figure 2(a)</b>. Importances derived by permuting each column and computing change in out-of-bag R<sup>2</sup> using <font size=-1><tt>scikit-learn</tt></font> <b>regressor</b>. Predicting apartment rental price from 4 features + a column of random numbers.</span>
-	</div>
-	<div>
-		<img src="images/cls_permute_random.svg" width="75%"><br>
+<td>
 <span class="caption"><b>Figure 2(b)</b>. Importances derived by permuting each column and computing change in out-of-bag accuracy using <font size=-1><tt>scikit-learn</tt></font> Random Forest <b>classifier</b>.</span>
-	</div>
-</div>
-
+</table>
 
 <p>
 The classifier default importances in <b>Figure 1(b)</b> are plausible, because price and location matter in real estate market. Unfortunately, the importance of the random column is in the middle of the pack, which makes no sense. <b>Figure 2(b)</b> places the permutation importance of the random column last, as it should be. One could also argue that the number of bedrooms is a key indicator of interest in an apartment, but the default mean-decrease-in-impurity gives the bedrooms feature little weight. The permutation importance in <b>Figure 2(b)</b>, however, gives a better picture of relative importance.

@@ -109,8 +109,20 @@ h1 {
 table {
 	border-spacing: 15px 0px
 }
+table th {
+	line-height: 1em;
+}
 .scrollbar_wrapper {
 	overflow: auto;
+}
+table.figure {
+	border=0
+}
+table.figure td {
+	width: 50%;
+	vertical-align: top;
+	line-height: 1.2em;
+	font-size: 80%;
 }
 table.dataframe {
         max-width: none;
