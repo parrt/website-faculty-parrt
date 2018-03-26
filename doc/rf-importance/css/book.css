@@ -139,6 +139,7 @@ table.dataframe td {
         text-size-adjust: 100%;
         vertical-align: top;
         padding: 2px 5px;
+		border-bottom: 0px;
         line-height: 1.1em;
 }
 table.dataframe th {
