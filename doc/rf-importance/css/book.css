@@ -95,7 +95,7 @@ h1 {
 }
 .codeblk {
     font-family: Monaco;
-    font-size: 70%;
+    font-size: 80%;
     box-sizing: border-box;
     margin: 0 0 1em 0;
     border: #E3EDF3 1px solid;
@@ -145,6 +145,7 @@ table.dataframe th {
 		font-family: "Helvetica", sans-serif;
         font-size: 80%;
         text-align: right;
+		line-height: 1em;
         text-size-adjust: 100%;
         vertical-align: bottom;
         border-bottom: 1px solid;
