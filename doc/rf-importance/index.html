@@ -66,16 +66,18 @@ In order to explain feature selection, we added a column of random numbers and r
 <p>
 After training, we plotted the <font size=-1><tt>rf.feature_importances_</tt></font> as shown in <b>Figure 1(a)</b>. Wow! New Yorkers really care about bathrooms. The number of bathrooms is the strongest predictor of rent price.  That's weird but interesting.
 
-<div class="fig-container">
-	<div>
-		<img src="images/regr_dflt_random_annotated.png" width="75%"><br>
-		<span class="caption"><b>Figure 1(a)</b>. <font size=-1><tt>scikit-learn</tt></font> default importances for Random Forest <b>regressor</b> predicting apartment rental price from 4 features + a column of random numbers. Random column is last, as we would expect but the importance of the number of bathrooms for predicting price is highly suspicious.</span>
-	</div>
-	<div>
-		<img src="images/cls_dflt_random_annotated.png" width="75%"><br>
-		<span class="caption"><b>Figure 1(b)</b>. <font size=-1><tt>scikit-learn</tt></font> default importances for Random Forest <b>classifier</b> predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. Highly suspicious that random column is much more important than the number of bedrooms.</span>
-	</div>
-</div>
+<table class=figure>
+<tr>
+<td>
+	<img src="images/regr_dflt_random_annotated.png" width="75%">
+<td>
+	<img src="images/cls_dflt_random_annotated.png" width="70%">
+<tr>
+<td>
+<b>Figure 1(a)</b>. <font size=-1><tt>scikit-learn</tt></font> default importances for Random Forest <b>regressor</b> predicting apartment rental price from 4 features + a column of random numbers. Random column is last, as we would expect but the importance of the number of bathrooms for predicting price is highly suspicious.
+<td>
+<b>Figure 1(b)</b>. <font size=-1><tt>scikit-learn</tt></font> default importances for Random Forest <b>classifier</b> predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. Highly suspicious that random column is much more important than the number of bedrooms.
+</table>
 
 As expected, <b>Figure 1(a)</b> shows the random column as the least important.
 
@@ -157,9 +159,9 @@ To test permutation importances, we plotted the regressor and classifier importa
 	<img src="images/cls_permute_random.svg" width="70%">
 <tr>
 <td>
-<span class="caption"><b>Figure 2(a)</b>. Importances derived by permuting each column and computing change in out-of-bag R<sup>2</sup> using <font size=-1><tt>scikit-learn</tt></font> <b>regressor</b>. Predicting apartment rental price from 4 features + a column of random numbers.</span>
+<b>Figure 2(a)</b>. Importances derived by permuting each column and computing change in out-of-bag R<sup>2</sup> using <font size=-1><tt>scikit-learn</tt></font> <b>regressor</b>. Predicting apartment rental price from 4 features + a column of random numbers.
 <td>
-<span class="caption"><b>Figure 2(b)</b>. Importances derived by permuting each column and computing change in out-of-bag accuracy using <font size=-1><tt>scikit-learn</tt></font> Random Forest <b>classifier</b>.</span>
+<b>Figure 2(b)</b>. Importances derived by permuting each column and computing change in out-of-bag accuracy using <font size=-1><tt>scikit-learn</tt></font> Random Forest <b>classifier</b>.
 </table>
 
 <p>

@@ -94,9 +94,9 @@ h1 {
     font-size: 80%;	
 }
 .codeblk {
-        font-family: Monaco;
-        font-size: 80%;
-        box-sizing: border-box;
+    font-family: Monaco;
+    font-size: 70%;
+    box-sizing: border-box;
     margin: 0 0 1em 0;
     border: #E3EDF3 1px solid;
     width: 100%;
@@ -121,7 +121,7 @@ table.figure {
 table.figure td {
 	width: 50%;
 	vertical-align: top;
-	line-height: 1.2em;
+	line-height: 1.1em;
 	font-size: 80%;
 }
 table.dataframe {
