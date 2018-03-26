@@ -5,19 +5,6 @@
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 <link rel="stylesheet" type="text/css" href="css/book.css"/>
 <title>Beware Default Random Forest Importances</title>
-<style>
-	.fig-container {
-  	  display: flex;
-	  overflow-x: scroll;	
-	  flex: auto;  
-	  width: 100%;
-	  flex-wrap: wrap;
-/*	  flex-flow: row wrap;*/
-	}
-	.fig-container > div {
-	  flex: 1;
-	}
-</style>
 </head>
 <body>
 <h1>Beware Default Random Forest Importances</h1>
@@ -61,14 +48,15 @@ To prepare educational material on regression and classification with random for
 <p>
 We trained a regressor to predict New York City apartment rent prices using four apartment features in the usual scikit way:
 
-<div class="codeblk">features = ['bathrooms','bedrooms','longitude','latitude']
+<div class="codeblk">features = ['bathrooms', 'bedrooms', 'longitude', 'latitude', 'price']
 dfr = df[features]
 X_train, y_train = dfr.drop('price',axis=1), dfr['price']
 X_train['random'] = np.random.random(size=len(X_train))
-rf = RandomForestRegressor(n_estimators=100,
-                           min_samples_leaf=1,
-                           n_jobs=-1,
-                           oob_score=True)
+rf = RandomForestRegressor(
+         n_estimators=100,
+         min_samples_leaf=1,
+         n_jobs=-1,
+         oob_score=True)
 rf.fit(X_train, y_train)
 </div>
 
@@ -80,12 +68,12 @@ After training, we plotted the <font size=-1><tt>rf.feature_importances_</tt></f
 
 <div class="fig-container">
 	<div>
-		<img src="images/regr_dflt_random_annotated.png" width="55%"><br>
-		<font size=-1><b>Figure 1(a)</b>. <font size=-1><tt>scikit-learn</tt></font> default importances for Random Forest <b>regressor</b> predicting apartment rental price from 4 features + a column of random numbers. Random column is last, as we would expect but the importance of the number of bathrooms for predicting price is highly suspicious.</font>
+		<img src="images/regr_dflt_random_annotated.png" width="75%"><br>
+		<span class="caption"><b>Figure 1(a)</b>. <font size=-1><tt>scikit-learn</tt></font> default importances for Random Forest <b>regressor</b> predicting apartment rental price from 4 features + a column of random numbers. Random column is last, as we would expect but the importance of the number of bathrooms for predicting price is highly suspicious.</span>
 	</div>
 	<div>
-		<img src="images/cls_dflt_random_annotated.png" width="55%"><br>
-		<font size=-1><b>Figure 1(b)</b>. <font size=-1><tt>scikit-learn</tt></font> default importances for Random Forest <b>classifier</b> predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. Highly suspicious that random column is much more important than the number of bedrooms.</font>
+		<img src="images/cls_dflt_random_annotated.png" width="75%"><br>
+		<span class="caption"><b>Figure 1(b)</b>. <font size=-1><tt>scikit-learn</tt></font> default importances for Random Forest <b>classifier</b> predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. Highly suspicious that random column is much more important than the number of bedrooms.</span>
 	</div>
 </div>
 
@@ -94,15 +82,15 @@ As expected, <b>Figure 1(a)</b> shows the random column as the least important.
 <p>
 Next, we built an RF classifier that predicts <font size=-1><tt>interest_level</tt></font> using the other five features and plotted the importances, again with a random column:
 
-<div class="codeblk">features = ['bathrooms','bedrooms','price','longitude','latitude',
-            'interest_level']
+<div class="codeblk">features = ['bathrooms', 'bedrooms', 'price', 'longitude', 'latitude', 'interest_level']
 dfc = df[features]
 X_train, y_train = dfc.drop('interest_level',axis=1), dfc['interest_level']
 X_train['random'] = np.random.random(size=len(X_train))
-rf = RandomForestClassifier(n_estimators=100,
-                            min_samples_leaf=5, # better generality with 5
-                            n_jobs=-1,
-                            oob_score=True)
+rf = RandomForestClassifier(
+         n_estimators=100,
+         min_samples_leaf=5, # better generality with 5
+         n_jobs=-1,
+         oob_score=True)
 rf.fit(X_train, y_train)
 </div>
 
@@ -162,12 +150,12 @@ To test permutation importances, we plotted the regressor and classifier importa
 
 <div class="fig-container">
 	<div>
-<img src="images/regr_permute_random.svg" width="55%"><br>
-<font size=-1><b>Figure 2(a)</b>. Importances derived by permuting each column and computing change in out-of-bag R<sup>2</sup> using <font size=-1><tt>scikit-learn</tt></font> <b>regressor</b>. Predicting apartment rental price from 4 features + a column of random numbers.</font>
+<img src="images/regr_permute_random.svg" width="75%"><br>
+<span class="caption"><b>Figure 2(a)</b>. Importances derived by permuting each column and computing change in out-of-bag R<sup>2</sup> using <font size=-1><tt>scikit-learn</tt></font> <b>regressor</b>. Predicting apartment rental price from 4 features + a column of random numbers.</span>
 	</div>
 	<div>
-		<img src="images/cls_permute_random.svg" width="55%"><br>
-<font size=-1><b>Figure 2(b)</b>. Importances derived by permuting each column and computing change in out-of-bag accuracy using <font size=-1><tt>scikit-learn</tt></font> Random Forest <b>classifier</b>.</font>
+		<img src="images/cls_permute_random.svg" width="75%"><br>
+<span class="caption"><b>Figure 2(b)</b>. Importances derived by permuting each column and computing change in out-of-bag accuracy using <font size=-1><tt>scikit-learn</tt></font> Random Forest <b>classifier</b>.</span>
 	</div>
 </div>
 
@@ -214,12 +202,12 @@ We force the <font size=-1><tt>random_state</tt></font> of each model to be the 
 
 <div class="fig-container">
 	<div>
-<img src="images/regr_dropcol_random.svg" width="55%"><br>
-<font size=-1><b>Figure 3(a)</b>. Importances derived by dropping each column, retraining <font size=-1><tt>scikit-learn</tt></font> Random Forest <b>regressor</b>, and computing change in out-of-bag R<sup>2</sup>. Predicting apartment rental price from 4 features + a column of random numbers. The importance of the random column is at the bottom as it should be.</font>
+<img src="images/regr_dropcol_random.svg" width="75%"><br>
+<span class="caption"><b>Figure 3(a)</b>. Importances derived by dropping each column, retraining <font size=-1><tt>scikit-learn</tt></font> Random Forest <b>regressor</b>, and computing change in out-of-bag R<sup>2</sup>. Predicting apartment rental price from 4 features + a column of random numbers. The importance of the random column is at the bottom as it should be.</span>
 	</div>
 	<div>
-		<img src="images/cls_dropcol_random.svg" width="55%"><br>
-<font size=-1><b>Figure 3(b)</b>. Importances derived by dropping each column, retraining <font size=-1><tt>scikit-learn</tt></font> Random Forest <b>classifier</b>, and computing change in out-of-bag accuracy. Predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. The importance of the random column is at the bottom as it should be.</font>
+		<img src="images/cls_dropcol_random.svg" width="75%"><br>
+<span class="caption"><b>Figure 3(b)</b>. Importances derived by dropping each column, retraining <font size=-1><tt>scikit-learn</tt></font> Random Forest <b>classifier</b>, and computing change in out-of-bag accuracy. Predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. The importance of the random column is at the bottom as it should be.</span>
 	</div>
 </div>
 
@@ -256,11 +244,11 @@ R's mean-decrease-in-impurity importance (type=2) gives the same implausible res
 <div class="fig-container">
 <div>
 <img src="images/regr_dflt_random_R_annotated.png" width="80%"><br>
-<font size=-1><b>Figure 4(a)</b>. R's type=2 importances for Random Forest <b>regressor</b> predicting apartment rental price from 4 features + a column of random numbers. Random column is last, as we would expect but the importance of the number of bathrooms for predicting price is highly suspicious.</font>
+<span class="caption"><b>Figure 4(a)</b>. R's type=2 importances for Random Forest <b>regressor</b> predicting apartment rental price from 4 features + a column of random numbers. Random column is last, as we would expect but the importance of the number of bathrooms for predicting price is highly suspicious.</span>
 </div>
 <div>
 <img src="images/cls_dflt_random_R_annotated.png" width="80%"><br>
-<font size=-1><b>Figure 4(b)</b>. R's type=2 importances for Random Forest <b>classifier</b> predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. Highly suspicious that random column is much more important than the number of bedrooms.</font>
+<span class="caption"><b>Figure 4(b)</b>. R's type=2 importances for Random Forest <b>classifier</b> predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. Highly suspicious that random column is much more important than the number of bedrooms.</span>
 </div>
 </div>
 
@@ -272,12 +260,12 @@ As a means of checking our permutation implementation in Python, we plotted and 
 
 <div class="fig-container">
 <div>
-<img src="images/regr_permute_random_R.svg" width="55%"><br>
-<font size=-1><b>Figure 5(a)</b>. R's type=1 permutation importance for RF <b>regressor</b>.</font>
+<img src="images/regr_permute_random_R.svg" width="75%"><br>
+<span class="caption"><b>Figure 5(a)</b>. R's type=1 permutation importance for RF <b>regressor</b>.</span>
 </div>
 <div>
-<img src="images/regr_permute_random.svg" width="55%"><br>
-<font size=-1><b>Figure 5(b)</b>. Python permutation importance for RF <b>regressor</b></font>
+<img src="images/regr_permute_random.svg" width="75%"><br>
+<span class="caption"><b>Figure 5(b)</b>. Python permutation importance for RF <b>regressor</b></span>
 </div>
 </div>
 
@@ -285,12 +273,12 @@ As a means of checking our permutation implementation in Python, we plotted and 
 	
 <div class="fig-container">
 <div>
-<img src="images/cls_permute_random_R.svg" width="55%"><br>
-<font size=-1><b>Figure 6(a)</b>. R's type=1 permutation importance for RF <b>classifier</b>.</font>
+<img src="images/cls_permute_random_R.svg" width="75%"><br>
+<span class="caption"><b>Figure 6(a)</b>. R's type=1 permutation importance for RF <b>classifier</b>.</span>
 </div>
 <div>
-<img src="images/cls_permute_random.svg" width="55%"><br>
-<font size=-1><b>Figure 6(b)</b>. Python permutation importance for RF <b>classifier</b></font>
+<img src="images/cls_permute_random.svg" width="75%"><br>
+<span class="caption"><b>Figure 6(b)</b>. Python permutation importance for RF <b>classifier</b></span>
 </div>
 </div>
 
@@ -302,12 +290,12 @@ For completeness, we implemented drop-column importance in R and compared to our
 
 <div class="fig-container">
 <div>
-<img src="images/regr_drop_random_R.svg" width="55%"><br>
-<font size=-1><b>Figure 8(a)</b>. Importances derived by dropping each column, retraining an RF <b>regressor</b> in R, and computing the change in out-of-bag R<sup>2</sup>.</font>
+<img src="images/regr_drop_random_R.svg" width="75%"><br>
+<span class="caption"><b>Figure 8(a)</b>. Importances derived by dropping each column, retraining an RF <b>regressor</b> in R, and computing the change in out-of-bag R<sup>2</sup>.</span>
 </div>
 <div>
-<img src="images/regr_dropcol_random.svg" width="55%"><br>
-<font size=-1><b>Figure 8(b)</b>. Importances derived by dropping each column, retraining a <font size=-1><tt>scikit</tt></font> RF <b>regressor</b>, and computing the change in out-of-bag R<sup>2</sup>.</font>
+<img src="images/regr_dropcol_random.svg" width="75%"><br>
+<span class="caption"><b>Figure 8(b)</b>. Importances derived by dropping each column, retraining a <font size=-1><tt>scikit</tt></font> RF <b>regressor</b>, and computing the change in out-of-bag R<sup>2</sup>.</span>
 </div>
 </div>
 
@@ -315,12 +303,12 @@ For completeness, we implemented drop-column importance in R and compared to our
 	
 <div class="fig-container">
 <div>
-<img src="images/cls_drop_random_R.svg" width="55%"><br>
-<font size=-1><b>Figure 9(a)</b>. Importances derived by dropping each column, retraining an RF <b>classifier</b> in R, and computing the change in out-of-bag accuracy.</font>
+<img src="images/cls_drop_random_R.svg" width="75%"><br>
+<span class="caption"><b>Figure 9(a)</b>. Importances derived by dropping each column, retraining an RF <b>classifier</b> in R, and computing the change in out-of-bag accuracy.</span>
 </div>
 <div>
-<img src="images/cls_dropcol_random.svg" width="55%"><br>
-<font size=-1><b>Figure 9(b)</b>. Importances derived by dropping each column, retraining a <font size=-1><tt>scikit</tt></font> RF <b>classifier</b>, and computing the change in out-of-bag accuracy.</font>
+<img src="images/cls_dropcol_random.svg" width="75%"><br>
+<span class="caption"><b>Figure 9(b)</b>. Importances derived by dropping each column, retraining a <font size=-1><tt>scikit</tt></font> RF <b>classifier</b>, and computing the change in out-of-bag accuracy.</span>
 </div>
 </div>
 	
