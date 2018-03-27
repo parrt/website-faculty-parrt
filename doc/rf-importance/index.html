@@ -9,8 +9,8 @@
 <body>
 <h1>Beware Default Random Forest Importances</h1>
 
-<a href="http://parrt.cs.usfca.edu">Terence Parr</a>, <a href="https://www.linkedin.com/in/kerem-turgutlu-12906b65/">Kerem Turgutlu</a>, 
-<a href="https://www.linkedin.com/in/cpcsiszar/">Christopher Csiszar</a>, and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a>
+<p id=author><a href="http://parrt.cs.usfca.edu">Terence Parr</a>, <a href="https://www.linkedin.com/in/kerem-turgutlu-12906b65/">Kerem Turgutlu</a>, 
+<a href="https://www.linkedin.com/in/cpcsiszar/">Christopher Csiszar</a>, and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
 
 <p>(Terence and Jeremy teach in University of San Francisco's <a href="https://www.usfca.edu/arts-sciences/graduate-programs/data-science">MS in Data Science program</a>. You might know Terence as the creator of the <a href="http://www.antlr.org">ANTLR parser generator</a>. For more material, see Jeremy's <a href="http://course.fast.ai">fast.ai courses</a>. Kerem and Christopher are current MS Data Science students.)</p>
 
@@ -109,9 +109,9 @@ After training, we plotted the <font size=-1><tt>rf.feature_importances_</tt></f
 <table class=figure>
 <tr>
 <td>
-	<img src="images/regr_dflt_random_annotated.png" width="75%">
+	<img src="images/regr_dflt_random_annotated.png" width="70%">
 <td>
-	<img src="images/cls_dflt_random_annotated.png" width="70%">
+	<img src="images/cls_dflt_random_annotated.png" width="65%">
 <tr>
 <td>
 <b>Figure 1(a)</b>. <font size=-1><tt>scikit-learn</tt></font> default importances for Random Forest <b>regressor</b> predicting apartment rental price from 4 features + a column of random numbers. Random column is last, as we would expect but the importance of the number of bathrooms for predicting price is highly suspicious.
@@ -269,7 +269,7 @@ That settles it for Python, so let's take a look at R, another popular language 
 Unfortunately, R's default importance strategy is mean-decrease-in-impurity, just like scikit, and so results are again unreliable. For example, here's a typical code snippet to create a random forest and get the feature importances that traps the unwary:
 
 <div class="codeblk"><span style="color: #a50026">rf <- randomForest(price~., data = df[, 1:5], mtry=4, ntree = 40)
-imp <- importance(rf) # default is mean-decrease-in-impurity</span>
+imp <- importance(rf) # default is mean-decrease-in-impurity!</span>
 </div>
 
 <p>
@@ -280,7 +280,7 @@ imp <- importance(rf, type=1, scale = F) # permutation importances
 </div>
 
 <p>
-Make sure that you don't use the <font size=-1><tt>MeanDecreaseGini</tt></font> column in the importance data frame; you want <font size=-1><tt>MeanDecreaseAccuracy</tt></font>.
+Make sure that you don't use the <font size=-1><tt>MeanDecreaseGini</tt></font> column in the importance data frame; you want column <font size=-1><tt>MeanDecreaseAccuracy</tt></font>.
 
 <p>
 It's worth comparing R and scikit in detail.  It not only gives us an opportunity to verify the results of our homebrewed permutation implementation, but we can also demonstrate that R's type=2 importances have the same issues as scikit's only importance implementation.
