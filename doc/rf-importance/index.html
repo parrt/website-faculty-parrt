@@ -26,6 +26,8 @@ March 26, 2018.</p>
 
 <b>Updated April 4, 2018</b> to include many more experiments in the <a href="#experimental">Experimental results</a> section.
 
+<p><b>Updated April 19, 2018</b> to include new rfpimp package features to handle collinear dataframe columns in <a href="#corr_collinear">Dealing with collinear features</a> section.
+
 <h3>TL;DR</h3>
 
 <p>
@@ -53,6 +55,7 @@ The scikit-learn Random Forest feature importance and R's default Random Forest 
 		<li><a href="#size">The effect of validation set size on importance</a>
 		<li><a href="#collinear">The effect of collinear features on importance</a>
 	</ul>
+	<li><a href="#corr_collinear">Dealing with collinear features</a>
 	<li><a href="#7">Summary</a></li>
 	<li><a href="#8">Resources and sample code</a></li>
 	<ul>
@@ -482,6 +485,8 @@ We hypothesized that it's possible to extract meaningful feature importance with
 
 <a name="collinear"></a><h4>The effect of collinear features on importance</h4>
 
+[See <a href="#corr_collinear">Dealing with collinear features</a> section below.]
+
 <p>
 Feature importance is a key part of model interpretation and understanding the business problem that originally drove you to create a model in the first place.  We have to keep in mind, though, that the feature importance mechanisms we describe in this article consider each feature individually.  If all features are totally independent and not correlated in any way, than computing feature importance individually is no problem. If, however, two or more features are <i>collinear</i> (correlated in some way but not necessarily with a strictly linear relationship) computing feature importance individually can give unexpected results.
 
@@ -617,6 +622,80 @@ From these experiments, it's safe to conclude that permutation importance (and m
  
 <p>
 You can find all of these collinearity experiments in <a href="https://github.com/parrt/random-forest-importances/blob/master/notebooks/collinear.ipynb">collinear.ipynb</a>
+
+<a name="corr_collinear"></a><h3>Dealing with collinear features</h3>
+
+We updated the rfpimp package (1.1 and beyond) to help understand importance graphs in the presence of collinear variables.
+
+To get an understanding of collinearity between variables, we created <tt>feature_corr_matrix(df)</tt> that takes a data frame and returns the Spearman's rank-order correlation between all pairs  of features as a matrix with feature names as index and column names. The result is a data frame in its own right. Here's a sample:
+
+<p><img src="images/corr_matrix.png" width="90%">
+
+<p>Spearman's correlation is the same thing as converting two variables  to rank values and then running a standard Pearson's correlation  on those ranked variables. Spearman's is nonparametric and does not  assume a linear relationship between the variables; it looks for monotonic relationships. You can visualize this more easily using <tt>plot_corr_heatmap()</tt>:
+	
+<p>
+<div class="codeblk">from rfpimp import plot_corr_heatmap
+plot_corr_heatmap(df_train, figsize=(7,5), label_fontsize=13, value_fontsize=11)
+</div>
+
+<p><img src="images/corrheatmap.svg" width="60%">
+
+<p>Because it is a symmetric matrix, only the upper triangle is shown. The diagonal is all 1.0 Spearman's correlation and is not shown either.
+
+<p>As we discussed,  permutation feature importance is computed by permuting a specific column and measuring the decrease in accuracy of the overall classifier or regressor. Of course, features that are collinear really should be permuted together. We have updated <tt>importances()</tt> so you can pass in either a list of features, such as a subset, or a list of lists containing groups. Let's start with the default:
+	
+<p><img src="images/imp.svg" width="50%">
+
+<p>You can pass in a list with a subset of features interesting to you.
+All unmentioned features will be grouped together into a single meta-feature
+on the graph. You can also pass in a list that has sublists like:
+<tt>[['latitude', 'longitude'], 'price', 'bedrooms']</tt>. Each string or sublist
+will be permuted together as a feature or meta-feature; the drop in
+overall accuracy of the model is the relative importance. Consider the following list of features and groups of features and snippet.
+	
+<p>
+<div class="codeblk">features = ['bathrooms', 'bedrooms', 
+            ['latitude', 'longitude'],  
+            ['price_to_median_beds', 'beds_baths', 'price'], 
+            ['beds_per_price','bedrooms']]
+I = importances(rf, X_test, y_test, features=features)
+plot_importances(I)		
+</div>
+
+<p>Notice how, in the following result, latitude and longitude together are very important as a meta-feature. The meta-features "steal" importance from the individual bedrooms and bathrooms columns.
+
+<p><img src="images/grouped_imp.svg" width="50%">
+
+<p>Any features not mentioned get lumped together into a single "other" meta-feature, so that all features are considered.  Imagine a model with 10 features and we requested a feature importance graph with just two very unimportant features. He would look like one or the other were very important, which could be very confusing. So, the importance of the specified features is given only in comparison to all possible futures. <b>Figure 17</b> shows two different sets of features and how all others are lumped together as one meta-feature.	
+
+<table class=figure>
+<tr>
+<td style="vertical-align: bottom;">
+	<img src="images/subset_imp.svg" width="90%">
+<td style="vertical-align: bottom;">
+	<img src="images/latlong_imp.svg" width="90%">
+<tr>
+<td>
+<b>Figure 17(a)</b>. features=['price',['latitude','longitude']]
+<td>
+
+<b>Figure 17(b)</b>. features=[['latitude','longitude']]
+</table>
+
+<p>Features can also appear in multiple  feature groups so that we can compare the relative importance of multiple meta-features that once. Remember that the permutation importance is just permuting all features associated with the meta-feature and comparing the drop in overall accuracy. There's no reason we can't do multiple overlapping sets of features in the same graph. For example, in the following, feature list, bedrooms appears in two meta-features as does beds_per_price.
+	
+<p>
+<div class="codeblk">features = [['latitude', 'longitude'],
+            ['price_to_median_beds', 'beds_baths', 'beds_per_price', 'bedrooms'],
+            ['price','beds_per_price','bedrooms']]
+</div>
+
+<p><img src="images/grouped_dup_imp.svg" width="50%">
+
+<p>
+You can find all of these experiments trying to deal with collinearity in <a href="https://github.com/parrt/random-forest-importances/blob/master/notebooks/rfpimp-collinear.ipynb">rfpimp-collinear.ipynb</a>
+
+Finally, a starting point for examining collinear features is to look at the correlation heat map and see which features are correlated and group those into meta-features for use in the importance plot.
 
 <a name="7"></a><h3>Summary</h3>
 
